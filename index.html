@@ -692,11 +692,8 @@ VIEWS.admin.dashboard = async function (t) {
   var s = await api('GET', '/api/stats'); if (!live(t)) return;
   var M = state.meta, sem = s.semester ? s.semester.name : 'No current semester';
   var cur = M.semesters.filter(function (x) { return x.active; })[0];
-  var steps = [['Create departments', M.departments.length > 0, 'departments'], ['Add programs', M.programs.length > 0, 'programs'], ['Set the current semester', !!s.semester, 'semesters'], ['Add courses', s.courses.total > 0, 'courses'],
-    ['Register lecturers', s.lecturers > 0, 'lecturers'], ['Register students', s.students > 0, 'students'], ['Enter student fees', s.fees.recorded > 0, 'fees'], ['Open course registration', !!(cur && cur.regOpen !== false), 'semesters']];
   var pct = s.fees.total ? Math.round(s.fees.paid / s.fees.total * 100) : 0;
   var aside = '<div class="dash-aside">' + todayPanel(sem + (cur ? (cur.regOpen === false ? ' - registration closed' : ' - registration open') : '')) +
-    checklist('Portal setup', steps) +
     (s.semester ? ringPanel('wallet', 'Fees collected', pct, [['Required', money(s.fees.total)], ['Paid', money(s.fees.paid)], ['Outstanding', money(s.fees.balance)], ['Students owing', s.fees.owing]], ['fees', 'Open']) : '') +
     panel('building', 'Students by department', donut(s.byDepartment.map(function (d) { return { label: d.name, value: d.students }; }), 'students'), ['departments', 'Open']) +
     panel('clock', 'Recent activity', s.recent.length ? '<ul class="timeline">' + s.recent.slice(0, 7).map(function (a) { return '<li>' + esc(a.detail) + '<small>' + fmtDate(a.at) + ' &middot; ' + esc(a.byName) + '</small></li>'; }).join('') + '</ul>' : emptyBox('Actions taken in the portal will be listed here.', 'No activity yet', '', '', true), ['audit', 'Audit log']) + '</div>';
