@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Starford International University - Student Portal</title>
+<link rel="icon" href="/logo.png">
+<style>
+:root { --brand:#0b3d91; --brand-dark:#082c69; --accent:#f2a900; --bg:#f4f6fa; --card:#fff; --text:#1c2433; --muted:#6b7587; --line:#dfe4ee; --ok:#1e8e3e; --bad:#c62828; --info:#1565c0; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; font-family: "Segoe UI", system-ui, Arial, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; }
+body::before { content: ""; position: fixed; inset: 0; background: url("/logo.png") center / min(55vw, 520px) no-repeat; opacity: .06; pointer-events: none; z-index: 0; }
+a { color: var(--brand); }
+h2 { margin: 0 0 16px; color: var(--brand-dark); font-size: 22px; }
+h3 { color: var(--brand-dark); margin: 24px 0 8px; font-size: 17px; }
+label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 4px; }
+input, select, textarea { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; background: #fff; color: var(--text); }
+input:focus, select:focus, button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+button, .btn { display: inline-block; background: var(--brand); color: #fff; border: 0; border-radius: 8px; padding: 10px 16px; font: inherit; cursor: pointer; text-decoration: none; }
+button:hover, .btn:hover { background: var(--brand-dark); }
+button:disabled { opacity: .5; cursor: not-allowed; }
+button.secondary, .btn.secondary { background: #e8ecf5; color: var(--brand-dark); }
+button.secondary:hover, .btn.secondary:hover { background: #d9e0f0; }
+button.danger { background: var(--bad); }
+.small { padding: 5px 10px; font-size: 13px; }
+label.btn { margin: 0; font-weight: 400; }
+label.btn input { display: none; }
+.boot { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; color: var(--muted); position: relative; z-index: 1; }
+
+/* login */
+.login-wrap { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; background: linear-gradient(135deg, var(--brand-dark), var(--brand)); overflow: hidden; z-index: 1; }
+.login-wrap::before { content: ""; position: absolute; inset: 0; background: url("/logo.png") center / min(80vw, 700px) no-repeat; opacity: .12; pointer-events: none; }
+.login-card { position: relative; width: 100%; max-width: 400px; background: var(--card); border-radius: 12px; padding: 28px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+.login-card h1 { font-size: 20px; margin: 14px 0 4px; color: var(--brand-dark); }
+.login-card .sub { margin: 0 0 18px; color: var(--muted); font-size: 14px; }
+.login-logo { text-align: center; }
+.login-logo img { height: 96px; max-width: 100%; width: auto; }
+.login-card button[type=submit] { width: 100%; margin-top: 18px; }
+.error { color: var(--bad); font-size: 13px; margin-top: 10px; min-height: 18px; }
+.hint { color: var(--muted); font-size: 12px; margin-top: 14px; }
+
+/* shell */
+.topbar { position: sticky; top: 0; z-index: 6; display: flex; align-items: center; gap: 12px; background: var(--brand); color: #fff; padding: 8px 16px; }
+.topbar .title { font-weight: 600; flex: 1; }
+.top-logo { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px; border-radius: 50%; background: #fff; border: 2px solid var(--accent); overflow: hidden; flex: none; }
+.top-logo img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
+.who { display: flex; align-items: center; gap: 14px; font-size: 13px; }
+.who button { background: var(--accent); color: var(--brand-dark); padding: 6px 12px; }
+.bell { color: #fff; text-decoration: none; }
+.count { display: inline-block; margin-left: 6px; background: var(--accent); color: var(--brand-dark); border-radius: 10px; padding: 1px 7px; font-weight: 700; font-size: 12px; }
+.layout { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 60px); }
+nav.side { width: 232px; flex: none; background: #fff; border-right: 1px solid var(--line); }
+.side-brand { display: flex; align-items: center; gap: 10px; padding: 16px; border-bottom: 1px solid var(--line); }
+.side-brand img { height: 46px; width: auto; max-width: 56px; object-fit: contain; }
+.side-brand b { display: block; font-size: 13px; line-height: 1.25; color: var(--brand-dark); }
+.side-brand small { color: var(--muted); font-size: 11px; }
+#sideLinks { padding: 8px 0; }
+#sideLinks a { display: block; padding: 11px 20px; text-decoration: none; color: var(--text); font-size: 14px; border-left: 4px solid transparent; }
+#sideLinks a:hover { background: #f0f3fa; }
+#sideLinks a.active { background: #e8eefb; border-left-color: var(--accent); color: var(--brand-dark); font-weight: 600; }
+.main-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+main { flex: 1; min-width: 0; padding: 20px; }
+.foot { padding: 14px 20px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); background: #fff; text-align: center; }
+.loading { color: var(--muted); padding: 20px; }
+
+/* content */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+.stat .num { font-size: 26px; font-weight: 700; color: var(--brand); }
+.stat .num.money { font-size: 21px; }
+.stat .lbl { color: var(--muted); font-size: 13px; }
+.stat.owing .num { color: var(--bad); } .stat.cleared .num { color: var(--ok); } .stat.credit .num { color: var(--info); }
+.note { background: #fff8e1; border: 1px solid #f3dd96; padding: 10px 12px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; }
+.note.error { background: #fdecea; border-color: #f3b4ae; color: #8a1f1f; }
+.empty { color: var(--muted); padding: 18px; text-align: center; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-bottom: 14px; }
+.toolbar > div { min-width: 190px; flex: 1; max-width: 260px; }
+.toolbar > div.grow { flex: 2; max-width: 340px; }
+.toolbar label { margin-top: 0; }
+.toolbar .push { margin-left: auto; flex: none; min-width: 0; }
+.table-wrap { overflow-x: auto; background: #fff; border: 1px solid var(--line); border-radius: 10px; margin-bottom: 14px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { background: #eef2fa; font-size: 12px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); white-space: nowrap; }
+tr.group td { background: #e8eefb; color: var(--brand-dark); font-weight: 700; padding: 8px 12px; }
+tr.inactive td { color: var(--muted); }
+.count-pill { display: inline-block; background: var(--brand); color: #fff; border-radius: 10px; padding: 0 8px; font-size: 12px; margin-left: 6px; }
+td.actions { white-space: nowrap; } td.actions > * { margin: 2px 2px 2px 0; }
+td input.num { width: 120px; padding: 6px 8px; text-align: right; }
+.who-cell { display: flex; align-items: center; gap: 10px; }
+.who-cell small { color: var(--muted); display: block; }
+.pill { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 12px; background: #e8eefb; color: var(--brand-dark); }
+.pill.ok { background: #dff3e4; color: #1a5e2a; } .pill.off { background: #eee; color: #666; } .pill.bad { background: #fde7e7; color: #8a1f1f; } .pill.info { background: #e3f0fd; color: #0d47a1; } .pill.warn { background: #fff1d1; color: #7a5300; }
+.bal { font-weight: 700; white-space: nowrap; } .bal.owing { color: var(--bad); } .bal.cleared { color: var(--ok); } .bal.credit { color: var(--info); }
+.card.unread { background: #fff8e1; border-color: #f3dd96; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.list li { margin: 4px 0; font-size: 13px; color: var(--muted); }
+code.secret { display: inline-block; font-size: 20px; letter-spacing: 1px; background: #eef2fa; border-radius: 6px; padding: 6px 12px; user-select: all; }
+
+/* avatar: shows the photo, or initials when there is no photo */
+.avatar { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; background: var(--brand); color: #fff; font-weight: 700; font-size: 14px; overflow: hidden; flex: none; }
+.avatar::after { content: attr(data-initials); }
+.avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.avatar.lg { width: 120px; height: 120px; font-size: 40px; }
+.profile-head { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; align-items: start; }
+dl.info { margin: 0; display: grid; grid-template-columns: 130px 1fr; gap: 6px 10px; font-size: 14px; } dl.info dt { color: var(--muted); } dl.info dd { margin: 0; }
+
+
+/* hero banner, feed, icons */
+.hero { position: relative; overflow: hidden; border-radius: 14px; padding: 22px 24px; margin-bottom: 20px; color: #fff; background: linear-gradient(120deg, var(--brand-dark), var(--brand) 70%, #1c5bc2); box-shadow: 0 6px 18px rgba(11,61,145,.25); }
+.hero::after { content: ""; position: absolute; right: -30px; top: -30px; width: 190px; height: 190px; border-radius: 50%; background: rgba(242,169,0,.18); }
+.hero h2 { color: #fff; margin: 0 0 4px; font-size: 24px; position: relative; z-index: 1; }
+.hero p { margin: 0; opacity: .9; font-size: 14px; position: relative; z-index: 1; }
+.hero .chips { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; position: relative; z-index: 1; }
+.chip { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.3); border-radius: 14px; padding: 3px 11px; font-size: 12px; }
+.quick { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.quick a { display: flex; align-items: center; gap: 10px; min-height: 52px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px; text-decoration: none; color: var(--brand-dark); font-weight: 600; font-size: 14px; transition: transform .12s, box-shadow .12s; }
+.quick a:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(11,61,145,.12); }
+.quick a::after { content: "\203A"; margin-left: auto; font-size: 20px; color: var(--accent); }
+.card { box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+.feed { max-width: 720px; }
+.post { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
+.post.unread { border-left: 4px solid var(--accent); }
+.post.pinned { background: #fffaf0; }
+.post-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.post-head .who2 { flex: 1; min-width: 0; line-height: 1.3; }
+.post-head .who2 b { font-size: 14px; color: var(--brand-dark); }
+.post-head .when { display: block; font-size: 12px; color: var(--muted); }
+.post h4 { margin: 0 0 6px; font-size: 17px; color: var(--text); }
+.post .body { white-space: pre-wrap; margin: 0; font-size: 14.5px; line-height: 1.55; overflow-wrap: anywhere; }
+.post .tags { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.post .acts { display: flex; gap: 6px; }
+.tag-new { background: var(--accent); color: var(--brand-dark); font-weight: 700; border-radius: 10px; padding: 1px 8px; font-size: 11px; }
+.composer { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; margin-bottom: 18px; max-width: 720px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
+.composer textarea { margin-top: 6px; }
+.composer .row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; margin-top: 10px; }
+.composer .row > div { flex: 1; min-width: 160px; }
+.avatar.sm { width: 40px; height: 40px; font-size: 14px; }
+.avatar.admin { background: var(--brand-dark); } .avatar.lecturer { background: #b47a00; }
+
+.sec { margin-bottom: 26px; } .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; border-bottom: 2px solid var(--line); margin-bottom: 12px; } .sec-head h3 { margin: 0 0 6px; }
+.mini { margin: 14px 0 8px; font-size: 14px; color: var(--muted); font-weight: 600; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+.bars { display: grid; gap: 8px; } .bar-row { display: grid; grid-template-columns: minmax(110px, 38%) 1fr 40px; gap: 10px; align-items: center; font-size: 13px; }
+.bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .bar-track { background: #e8eefb; border-radius: 6px; height: 12px; overflow: hidden; } .bar-fill { background: var(--brand); height: 100%; border-radius: 6px; } .bar-val { text-align: right; font-weight: 700; color: var(--brand-dark); }
+.course-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.course-card { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; text-align: left; background: #fff; color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 13px; }
+.course-card:hover { background: #f0f3fa; } .course-card.on { border-color: var(--brand); box-shadow: inset 0 0 0 1px var(--brand); background: #e8eefb; }
+.course-card b { color: var(--brand-dark); font-size: 14px; } .course-card span { color: var(--muted); }
+.chips-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+
+/* pop-ups */
+.modal-back { position: fixed; inset: 0; z-index: 20; background: rgba(8,44,105,.45); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.modal { background: #fff; border-radius: 12px; padding: 22px; width: 100%; max-width: 460px; max-height: 92vh; overflow-y: auto; box-shadow: 0 12px 40px rgba(0,0,0,.3); }
+.modal h3 { margin: 0 0 6px; } .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+#toasts { position: fixed; right: 16px; bottom: 16px; z-index: 30; display: flex; flex-direction: column; gap: 8px; }
+.toast { background: var(--brand-dark); color: #fff; padding: 10px 16px; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.25); max-width: 340px; font-size: 14px; }
+.toast.error { background: var(--bad); } .toast.ok { background: var(--ok); }
+
+
+/* richer layout: icons, page headers, side panels, rings, empty states */
+.ic { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+nav.side { position: sticky; top: 62px; align-self: flex-start; height: calc(100vh - 62px); display: flex; flex-direction: column; overflow-y: auto; }
+#sideLinks { flex: 1; }
+#sideLinks a { display: flex; align-items: center; gap: 12px; }
+#sideLinks a .ic { color: var(--muted); }
+#sideLinks a.active .ic, #sideLinks a:hover .ic { color: var(--brand); }
+#sideLinks a .count { margin-left: auto; }
+.side-group { padding: 14px 20px 4px; font-size: 11px; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.side-foot { border-top: 1px solid var(--line); padding: 14px 16px; display: flex; gap: 10px; align-items: center; background: #f7f9fd; }
+.side-foot b { display: block; font-size: 13px; line-height: 1.25; } .side-foot small { color: var(--muted); font-size: 11px; text-transform: capitalize; }
+main { max-width: 1500px; width: 100%; }
+.page-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; padding: 16px 18px; background: #fff; border: 1px solid var(--line); border-left: 5px solid var(--accent); border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+.page-head .ph-ic { width: 46px; height: 46px; border-radius: 12px; background: #e8eefb; color: var(--brand); display: flex; align-items: center; justify-content: center; flex: none; }
+.page-head .ph-ic .ic { width: 25px; height: 25px; }
+.page-head h2 { margin: 0; font-size: 21px; } .page-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.stat { display: flex; align-items: center; gap: 14px; }
+.stat .st-t { min-width: 0; } .stat .num { overflow-wrap: normal; } .stat .num.money { font-size: 18px; }
+.st-ic { width: 46px; height: 46px; border-radius: 12px; background: #e8eefb; color: var(--brand); display: flex; align-items: center; justify-content: center; flex: none; }
+.st-ic .ic { width: 24px; height: 24px; }
+.st-ic.gold { background: #fff3d6; color: #a06a00; } .st-ic.green { background: #dff3e4; color: #1a5e2a; } .st-ic.violet { background: #efe9fb; color: #5b3aa8; }
+.stat.owing .st-ic { background: #fde7e7; color: var(--bad); } .stat.cleared .st-ic { background: #dff3e4; color: var(--ok); } .stat.credit .st-ic { background: #e3f0fd; color: var(--info); }
+.dash { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 22px; align-items: start; }
+.dash-aside { display: grid; gap: 16px; }
+.dash .feed, .dash .composer { max-width: none; }
+@media (max-width: 1100px) { .dash { grid-template-columns: 1fr; } }
+.panel { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+.panel h3 { margin: 0 0 10px; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+.panel h3 .ic { width: 18px; height: 18px; color: var(--accent); }
+.panel h3 .more { margin-left: auto; font-size: 12px; font-weight: 400; }
+.panel p { margin: 0 0 8px; font-size: 13.5px; }
+.panel dl.info { grid-template-columns: 96px 1fr; font-size: 13px; }
+.today { display: flex; gap: 14px; align-items: center; }
+.today .cal { width: 58px; text-align: center; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); flex: none; }
+.today .cal i { display: block; font-style: normal; background: var(--brand); color: #fff; font-size: 11px; padding: 2px 0; text-transform: uppercase; letter-spacing: .6px; }
+.today .cal b { display: block; font-size: 24px; padding: 4px 0; color: var(--brand-dark); }
+.today .hint { margin: 2px 0 0; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+.steps li { display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+.steps li a { color: inherit; text-decoration: none; flex: 1; } .steps li a:hover { text-decoration: underline; }
+.steps .dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #c7d2ea; display: flex; align-items: center; justify-content: center; flex: none; color: #fff; }
+.steps .dot .ic { width: 13px; height: 13px; stroke-width: 3; }
+.steps li.done .dot { background: var(--ok); border-color: var(--ok); } .steps li.done a { color: var(--muted); text-decoration: line-through; }
+.progress { height: 8px; background: #e8eefb; border-radius: 6px; overflow: hidden; margin: 6px 0 12px; }
+.progress > i { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), var(--accent)); border-radius: 6px; }
+.ring-wrap { display: flex; align-items: center; gap: 16px; }
+.ring { --p: 0; width: 96px; height: 96px; border-radius: 50%; background: conic-gradient(var(--brand) calc(var(--p) * 1%), #e8eefb 0); display: flex; align-items: center; justify-content: center; flex: none; }
+.ring span { width: 72px; height: 72px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: var(--brand-dark); }
+.ring-legend { font-size: 13px; display: grid; gap: 4px; } .ring-legend b { color: var(--brand-dark); }
+.timeline { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 2px solid var(--line); display: grid; gap: 12px; }
+.timeline li { position: relative; font-size: 13px; line-height: 1.4; margin: 0; color: var(--text); overflow-wrap: anywhere; }
+.timeline li::before { content: ""; position: absolute; left: -20px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; box-shadow: 0 0 0 1px var(--line); }
+.timeline small { display: block; color: var(--muted); font-size: 11px; }
+.minilist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.minilist li { display: flex; align-items: center; gap: 10px; font-size: 13px; margin: 0; color: var(--text); }
+.minilist li span.r { margin-left: auto; font-weight: 700; color: var(--brand-dark); white-space: nowrap; }
+.minilist li span.r.bad { color: var(--bad); }
+.minilist li small { display: block; color: var(--muted); }
+.emptybox { background: #fff; border: 1px dashed #c7d2ea; border-radius: 14px; padding: 30px 20px; text-align: center; color: var(--muted); margin-bottom: 14px; }
+.emptybox .eb-ic { width: 64px; height: 64px; margin: 0 auto 12px; border-radius: 50%; background: #eef2fa; color: var(--brand); display: flex; align-items: center; justify-content: center; }
+.emptybox .eb-ic .ic { width: 30px; height: 30px; }
+.emptybox b { display: block; color: var(--brand-dark); font-size: 16px; margin-bottom: 4px; }
+.emptybox p { margin: 0 auto; max-width: 440px; font-size: 14px; } .emptybox .btn { margin-top: 14px; }
+.emptybox.sm { padding: 16px; } .emptybox.sm .eb-ic { width: 40px; height: 40px; margin-bottom: 6px; } .emptybox.sm .eb-ic .ic { width: 20px; height: 20px; }
+.login-info { position: relative; color: #fff; max-width: 430px; display: none; margin-right: 56px; }
+.login-info h2 { color: #fff; font-size: 30px; line-height: 1.2; margin: 0 0 10px; }
+.login-info > p { opacity: .9; margin: 0 0 8px; line-height: 1.5; }
+.login-info .feat { display: flex; gap: 14px; margin-top: 18px; align-items: flex-start; }
+.login-info .fi { width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25); display: flex; align-items: center; justify-content: center; flex: none; }
+.login-info .feat b { display: block; } .login-info .feat span { font-size: 13px; opacity: .85; }
+.login-info .where { margin-top: 28px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.25); font-size: 13px; opacity: .85; }
+@media (min-width: 900px) { .login-info { display: block; } }
+
+/* round 2 polish */
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+#view > * { animation: rise .25s ease both; }
+tbody tr:hover td { background: #f3f6fd; }
+tbody tr:nth-child(even) td { background: #fafbfe; } tbody tr:nth-child(even):hover td { background: #f3f6fd; } tr.group td, tr.group:hover td { background: #e8eefb !important; }
+thead th { position: sticky; top: 0; z-index: 1; }
+.card.stat { transition: transform .12s, box-shadow .12s; } .card.stat:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(11,61,145,.12); }
+.who .me { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.12); border-radius: 22px; padding: 3px 12px 3px 4px; }
+.who .me .avatar { width: 30px; height: 30px; font-size: 12px; background: var(--accent); color: var(--brand-dark); }
+.who .me .role { font-size: 10px; text-transform: uppercase; letter-spacing: .6px; background: var(--accent); color: var(--brand-dark); border-radius: 8px; padding: 1px 6px; font-weight: 700; }
+.hero { padding: 26px 28px; } .hero::before { content: ""; position: absolute; right: 60px; bottom: -50px; width: 130px; height: 130px; border-radius: 50%; background: rgba(255,255,255,.07); }
+.donut-wrap { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.donut { width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex: none; }
+.donut span { width: 78px; height: 78px; border-radius: 50%; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; color: var(--brand-dark); line-height: 1.1; }
+.donut small { font-weight: 400; font-size: 10px; color: var(--muted); }
+.legend { display: grid; gap: 5px; font-size: 13px; min-width: 150px; flex: 1; }
+.legend div { display: flex; align-items: center; gap: 8px; } .legend i { width: 10px; height: 10px; border-radius: 3px; flex: none; } .legend b { margin-left: auto; color: var(--brand-dark); padding-left: 10px; }
+
+@media (max-width: 760px) {
+  .side-group, .side-foot { display: none; }
+  nav.side { position: static; height: auto; display: block; }
+  .stat .st-ic { width: 40px; height: 40px; }
+  .layout { flex-direction: column; }
+  nav.side { width: 100%; border-right: 0; border-bottom: 1px solid var(--line); }
+  .side-brand { display: none; }
+  #sideLinks { display: flex; overflow-x: auto; padding: 0; }
+  #sideLinks a { white-space: nowrap; border-left: 0; border-bottom: 3px solid transparent; }
+  #sideLinks a.active { border-bottom-color: var(--accent); }
+  #whoName { display: none; }
+  main { padding: 14px; }
+  .two { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div id="boot" class="boot">Loading the portal...</div>
+
+<div id="loginScreen" class="login-wrap" hidden>
+  <div class="login-info">
+    <h2>Welcome to the Starford Student Portal</h2>
+    <p>Your courses, fees, transcripts and university news in one safe place.</p>
+    <div class="feat"><span class="fi" data-ic="book"></span><div><b>Course registration</b><span>Pick your courses each semester and see who teaches them.</span></div></div>
+    <div class="feat"><span class="fi" data-ic="wallet"></span><div><b>Fees at a glance</b><span>See what you owe and what you have paid.</span></div></div>
+    <div class="feat"><span class="fi" data-ic="file"></span><div><b>Transcripts online</b><span>Download your transcript as soon as the registry sends it.</span></div></div>
+    <div class="feat"><span class="fi" data-ic="megaphone"></span><div><b>University news</b><span>Announcements from the administration and your lecturers.</span></div></div>
+    <div class="where">Starford International University &middot; Juba, South Sudan</div>
+  </div>
+  <div class="login-card">
+    <div class="login-logo"><img src="/logo.png" alt="Starford International University logo" data-optional></div>
+    <h1>Starford International University</h1>
+    <p class="sub">Student Portal &middot; Juba, South Sudan</p>
+    <form id="loginForm" autocomplete="off">
+      <label for="loginId">Registration number / Staff ID</label>
+      <input id="loginId" type="text" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button type="submit">Sign in</button>
+      <div class="error" id="loginErr" role="alert"></div>
+    </form>
+    <p class="hint">Forgot your password? Please contact the registry office.</p>
+  </div>
+</div>
+
+<div id="pwScreen" class="login-wrap" hidden>
+  <div class="login-card">
+    <h1>Choose a new password</h1>
+    <p class="sub">For your safety, replace the temporary password before you continue.</p>
+    <form id="pwForm" autocomplete="off">
+      <label for="pwCurrent">Temporary password</label>
+      <input id="pwCurrent" type="password" autocomplete="current-password" required>
+      <label for="pwNew">New password</label>
+      <input id="pwNew" type="password" autocomplete="new-password" required>
+      <label for="pwNew2">Type the new password again</label>
+      <input id="pwNew2" type="password" autocomplete="new-password" required>
+      <button type="submit">Save and continue</button>
+      <div class="error" id="pwErr" role="alert"></div>
+    </form>
+    <p class="hint">At least 8 characters, with at least one letter and one number.</p>
+    <p class="hint"><a href="#" id="pwLogout">Sign out</a></p>
+  </div>
+</div>
+
+<div id="appScreen" hidden>
+  <header class="topbar">
+    <a href="#dashboard" class="top-logo" title="Home"><img src="/logo.png" alt="" data-optional></a>
+    <span class="title">Starford Student Portal</span>
+    <div class="who">
+      <a class="bell" id="bell" href="#notifications" hidden>Notifications<span id="bellCount" class="count" hidden></span></a>
+      <span id="whoName" class="me"></span>
+      <button id="logoutBtn" type="button">Log out</button>
+    </div>
+  </header>
+  <div class="layout">
+    <nav class="side">
+      <div class="side-brand"><img src="/logo.png" alt="" data-optional><div><b>Starford International University</b><small>Juba, South Sudan</small></div></div>
+      <div id="sideLinks"></div>
+      <div class="side-foot" id="sideFoot"></div>
+    </nav>
+    <div class="main-col"><main id="view"></main><footer class="foot">&copy; <span id="footYear"></span> Starford International University, Juba, South Sudan &middot; Student Portal</footer></div>
+  </div>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toasts"></div>
+
+<script>
+(function () {
+'use strict';
+var $ = function (id) { return document.getElementById(id); };
+var state = { user: null, meta: null, token: 0, poll: null };
+var ui = {
+  audit: { q: '' },
+  mycourses: { semesterId: '' },
+  mystudents: { semesterId: '', courseId: '' },
+  marks: { semesterId: '', courseId: '' },
+  courses: { departmentId: '', programId: '', semesterId: '' },
+  reports: { semesterId: '' },
+  students: { departmentId: '', programId: '' },
+  lecturers: { departmentId: '', programId: '' },
+  fees: { semesterId: '', departmentId: '', programId: '' },
+  transcripts: { semesterId: '', departmentId: '', programId: '' }
+};
+
+/* ---------- small helpers ---------- */
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function live(t) { return t === state.token; }
+function fmtDate(ts) { return new Date(ts).toLocaleDateString('en-GB'); }
+function money(n) { return state.meta.settings.currency + ' ' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+function nameOf(list, id) { var x = list.filter(function (i) { return i.id === id; })[0]; return x ? x.name : '-'; }
+function qs(obj) { var p = new URLSearchParams(); Object.keys(obj).forEach(function (k) { if (obj[k]) p.set(k, obj[k]); }); return p.toString(); }
+function fmtSize(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
+
+function toast(msg, kind) {
+  var el = document.createElement('div');
+  el.className = 'toast ' + (kind || ''); el.textContent = msg; el.setAttribute('role', 'status');
+  $('toasts').appendChild(el);
+  setTimeout(function () { el.remove(); }, kind === 'error' ? 6000 : 3500);
+}
+
+/* Each browser tab gets its own private slot, so different people can be signed in in different tabs at the same time. */
+var SLOT = (function () {
+  var s = '';
+  try { s = sessionStorage.getItem('portalSlot') || ''; } catch (e) { s = ''; }
+  if (!/^[A-Za-z0-9]{8,32}$/.test(s)) {
+    var a = new Uint8Array(12); crypto.getRandomValues(a);
+    s = Array.prototype.map.call(a, function (b) { return (b % 36).toString(36); }).join('');
+    try { sessionStorage.setItem('portalSlot', s); } catch (e) { /* tab still works for this page load */ }
+  }
+  return s;
+})();
+var BASE = '/s/' + SLOT;
+async function api(method, url, body, opts) {
+  opts = opts || {};
+  if (url.indexOf('/api/') === 0) url = BASE + url;
+  var init = { method: method, credentials: 'same-origin', headers: { 'X-Portal': '1' } };
+  if (body instanceof Blob) { init.body = body; init.headers['Content-Type'] = opts.type || body.type || 'application/octet-stream'; }
+  else if (body !== undefined) { init.body = JSON.stringify(body); init.headers['Content-Type'] = 'application/json'; }
+  var res;
+  try { res = await fetch(url, init); }
+  catch (e) { throw new Error('Cannot reach the portal server. Check your connection and try again.'); }
+  var data = null;
+  try { data = await res.json(); } catch (e) { /* no body */ }
+  if (!res.ok) {
+    if (res.status === 401 && !opts.quiet) { sessionEnded(); throw new Error('Your session has ended. Please sign in again.'); }
+    var err = new Error((data && data.error) || 'Something went wrong. Please try again.');
+    err.status = res.status; err.code = data && data.code;
+    throw err;
+  }
+  return data;
+}
+
+/* a photo or logo that cannot load simply disappears (initials / text remain) */
+document.addEventListener('error', function (e) {
+  var t = e.target;
+  if (t && t.tagName === 'IMG') {
+    if (t.hasAttribute('data-avatar')) t.remove();
+    else if (t.hasAttribute('data-optional')) t.style.display = 'none';
+  }
+}, true);
+
+function avatar(u, cls) {
+  var initials = String(u.name || '?').split(/\s+/).filter(Boolean).slice(0, 2).map(function (w) { return w[0].toUpperCase(); }).join('');
+  var img = u.hasPhoto ? '<img src="' + BASE + '/api/users/' + esc(u.id) + '/photo?v=' + esc(u.photoV || 0) + '" alt="" data-avatar>' : '';
+  return '<span class="avatar ' + (cls || '') + '" data-initials="' + esc(initials) + '">' + img + '</span>';
+}
+
+/* ---------- pop-up forms ---------- */
+function openModal(title, bodyHtml, onSubmit, submitText, noCancel) {
+  var root = $('modalRoot');
+  root.innerHTML = '<div class="modal-back"><form class="modal" novalidate><h3>' + esc(title) + '</h3><div>' + bodyHtml + '</div><div class="modal-actions">' +
+    (noCancel ? '' : '<button type="button" class="secondary" data-close>Cancel</button>') + '<button type="submit">' + esc(submitText || 'Save') + '</button></div></form></div>';
+  var back = root.firstChild, form = root.querySelector('form');
+  function onKey(e) { if (e.key === 'Escape') close(); }
+  function close() { root.innerHTML = ''; document.removeEventListener('keydown', onKey); }
+  document.addEventListener('keydown', onKey);
+  back.addEventListener('mousedown', function (e) { if (e.target === back) close(); });
+  var cancel = form.querySelector('[data-close]'); if (cancel) cancel.addEventListener('click', close);
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var btn = form.querySelector('[type=submit]'); btn.disabled = true;
+    try {
+      var after = await onSubmit(form, close);
+      if (after !== false) { close(); if (typeof after === 'function') after(); }
+    } catch (err) { toast(err.message, 'error'); }
+    btn.disabled = false;
+  });
+  var first = form.querySelector('input,select'); if (first) first.focus();
+}
+function formVals(form) { return Object.fromEntries(new FormData(form).entries()); }
+function showCredentials(title, loginId, pw) {
+  openModal(title, '<p>Give these sign-in details to the person. They must choose a new password the first time they sign in.</p>' +
+    '<p><b>ID:</b> ' + esc(loginId) + '</p><p><b>Temporary password:</b><br><code class="secret">' + esc(pw) + '</code></p>' +
+    '<p class="hint">This password is shown only once.</p>', function () {}, 'Done', true);
+}
+
+/* ---------- screens ---------- */
+function showScreen(name) {
+  $('boot').hidden = true;
+  $('loginScreen').hidden = name !== 'login';
+  $('pwScreen').hidden = name !== 'pw';
+  $('appScreen').hidden = name !== 'app';
+  if (name === 'login') { $('loginId').focus(); }
+}
+function sessionEnded() {
+  state.user = null; clearInterval(state.poll); state.token++;
+  $('modalRoot').innerHTML = '';
+  showScreen('login');
+  $('loginErr').textContent = 'Your session has ended. Please sign in again.';
+}
+
+/* ---------- menus and routing ---------- */
+var MENUS = {
+  admin: [['dashboard', 'Dashboard'], ['announcements', 'Announcements'], ['students', 'Students'], ['lecturers', 'Lecturers'], ['admins', 'Administrators'], ['accountsstaff', 'Accounts Staff'], ['courses', 'Courses'], ['departments', 'Departments'], ['programs', 'Programs'],
+          ['semesters', 'Semesters'], ['fees', 'Fees'], ['transcripts', 'Transcripts'], ['marks', 'Marks and Results'], ['reports', 'Reports'], ['audit', 'Audit Log'], ['settings', 'Settings'], ['profile', 'My Profile']],
+  accounts: [['dashboard', 'Dashboard'], ['fees', 'Student Fees'], ['feereport', 'Fee Report'], ['announcements', 'Announcements'], ['notifications', 'Notifications'], ['profile', 'My Profile']],
+  lecturer: [['dashboard', 'Dashboard'], ['mycourses', 'My Courses'], ['mystudents', 'My Students'], ['marks', 'Marks and Results'], ['announcements', 'Announcements'], ['notifications', 'Notifications'], ['profile', 'My Profile']],
+  student: [['dashboard', 'Dashboard'], ['mycourses', 'My Courses'], ['myresults', 'My Results'], ['myfees', 'My Fees'], ['mytranscripts', 'My Transcripts'], ['announcements', 'Announcements'], ['notifications', 'Notifications'], ['profile', 'My Profile']]
+};
+var ICON = {
+  home: '<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.7a3.5 3.5 0 010 6.6"/><path d="M18 14.3c2.2.7 3.5 2.6 3.5 5.7"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+  chalk: '<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20l4-4 4 4"/><path d="M7 9h6M7 12h9"/>',
+  book: '<path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 21a2 2 0 012-2h13"/><path d="M9 7h6"/>',
+  shield: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  briefcase: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V4h6v3M3 13h18"/>',
+  megaphone: '<path d="M3 10v4h4l7 5V5L7 10z"/><path d="M17.5 8.5a5 5 0 010 7"/>',
+  building: '<path d="M4 21V5l8-3 8 3v16"/><path d="M9 21v-5h6v5"/><path d="M8 9h2M14 9h2M8 13h2M14 13h2"/>',
+  layers: '<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+  calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  wallet: '<rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10h19"/><circle cx="17" cy="14.5" r="1.2"/>',
+  file: '<path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/>',
+  chart: '<path d="M4 20V4"/><path d="M4 20h17"/><rect x="8" y="12" width="3" height="5"/><rect x="13" y="8" width="3" height="9"/><rect x="18" y="5" width="2.5" height="12"/>',
+  clipboard: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM8.5 12h7M8.5 16h5"/>',
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
+  bell: '<path d="M6 17v-6a6 6 0 0112 0v6l2 2H4z"/><path d="M10 21h4"/>',
+  inbox: '<path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 3h6l1-3h5"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  award: '<circle cx="12" cy="9" r="6"/><path d="M8.5 14.5L7 21l5-3 5 3-1.5-6.5"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
+};
+function ico(name) { return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">' + (ICON[name] || ICON.chart) + '</svg>'; }
+var MENU_ICON = { dashboard: 'home', students: 'users', lecturers: 'chalk', courses: 'book', admins: 'shield', accountsstaff: 'briefcase', announcements: 'megaphone', departments: 'building', programs: 'layers', semesters: 'calendar', fees: 'wallet', feereport: 'chart', transcripts: 'file', reports: 'chart', audit: 'clipboard', settings: 'gear', profile: 'user', mycourses: 'book', mystudents: 'users', myfees: 'wallet', mytranscripts: 'file', notifications: 'bell', marks: 'clipboard', myresults: 'award' };
+var MENU_GROUP = { dashboard: 'Overview', students: 'People', lecturers: 'People', admins: 'People', accountsstaff: 'People', courses: 'Academics', departments: 'Academics', programs: 'Academics', semesters: 'Academics', fees: 'Finance', feereport: 'Finance', transcripts: 'Records', marks: 'Records', reports: 'Records', announcements: 'Updates', notifications: 'Updates', audit: 'System', settings: 'System', profile: 'Account' };
+function groupOf(role, key) {
+  if (role === 'student' && /^my/.test(key)) return 'My studies';
+  if (role === 'lecturer' && (/^my/.test(key) || key === 'marks')) return 'Teaching';
+  return MENU_GROUP[key] || '';
+}
+var PAGE_INFO = {
+  marks: 'Enter coursework and exam marks, check them, then publish results to students.', myresults: 'Your published grades and GPA.',
+  students: 'Register, search and manage student accounts.', lecturers: 'Register lecturers and manage their departments.', admins: 'People who can manage the whole portal.',
+  accountsstaff: 'Finance staff who update student fees.', courses: 'Courses, lecturers and student enrolment.', departments: 'The departments of the university.', programs: 'Degree and diploma programs offered.',
+  semesters: 'Academic terms, registration windows and credit limits.', fees: 'Record what each student must pay and has paid.', transcripts: 'Send transcripts to students.', reports: 'School-wide numbers you can download.',
+  audit: 'A record of important actions in the portal.', settings: 'Portal-wide options.', announcements: 'News and notices from the university.', notifications: 'Messages about your account.',
+  profile: 'Your details and photo.', myfees: 'What you owe and what you have paid.', mytranscripts: 'Your transcripts from the registry.', feereport: 'Collection progress and students who still owe.',
+  'student:mycourses': 'Pick the courses you will take this semester.', 'lecturer:mycourses': 'Choose the courses you will teach.', mystudents: 'Students enrolled in your courses, by semester.', mycourses: 'Your courses.'
+};
+function decoratePage() {
+  var v = $('view'), h = v.firstElementChild;
+  if (!h || h.tagName !== 'H2' || h.children.length || !state.user) return;
+  var key = state.page, sub = PAGE_INFO[state.user.role + ':' + key] || PAGE_INFO[key] || '';
+  var d = document.createElement('div'); d.className = 'page-head';
+  d.innerHTML = '<span class="ph-ic">' + ico(MENU_ICON[key]) + '</span><div><h2>' + esc(h.textContent) + '</h2>' + (sub ? '<p>' + esc(sub) + '</p>' : '') + '</div>';
+  h.replaceWith(d);
+}
+function emptyBox(text, title, hash, label, small) {
+  return '<div class="emptybox' + (small ? ' sm' : '') + '"><div class="eb-ic">' + ico('inbox') + '</div><b>' + esc(title || 'Nothing here yet') + '</b><p>' + esc(text) + '</p>' + (hash ? '<a class="btn small" href="#' + esc(hash) + '">' + esc(label || 'Open') + '</a>' : '') + '</div>';
+}
+function panel(icon, title, inner, more) { return '<div class="panel"><h3>' + ico(icon) + esc(title) + (more ? '<a class="more" href="#' + esc(more[0]) + '">' + esc(more[1]) + '</a>' : '') + '</h3>' + inner + '</div>'; }
+function todayPanel(line) {
+  var d = new Date();
+  return '<div class="panel today"><div class="cal"><i>' + esc(d.toLocaleDateString('en-GB', { month: 'short' })) + '</i><b>' + d.getDate() + '</b></div><div><b>' + esc(d.toLocaleDateString('en-GB', { weekday: 'long' })) + '</b>' + (line ? '<div class="hint">' + esc(line) + '</div>' : '') + '</div></div>';
+}
+function checklist(title, steps) {
+  var done = steps.filter(function (x) { return x[1]; }).length;
+  if (done === steps.length) return panel('check', title, '<p>Everything is done. Well done.</p><div class="progress"><i style="width:100%"></i></div>');
+  return panel('check', title, '<div class="hint" style="margin:0">' + done + ' of ' + steps.length + ' done</div><div class="progress"><i style="width:' + Math.round(done / steps.length * 100) + '%"></i></div><ul class="steps">' +
+    steps.map(function (x) { return '<li class="' + (x[1] ? 'done' : '') + '"><span class="dot">' + (x[1] ? ico('check') : '') + '</span><a href="#' + esc(x[2]) + '">' + esc(x[0]) + '</a></li>'; }).join('') + '</ul>');
+}
+function ringPanel(icon, title, pct, rows, more) {
+  return panel(icon, title, '<div class="ring-wrap"><div class="ring" style="--p:' + Math.max(0, Math.min(100, pct)) + '"><span>' + pct + '%</span></div><div class="ring-legend">' +
+    rows.map(function (r) { return '<div>' + esc(r[0]) + ': <b>' + esc(r[1]) + '</b></div>'; }).join('') + '</div></div>', more);
+}
+var DONUT_COLORS = ['#0b3d91', '#f2a900', '#1e8e3e', '#6b46c1', '#c62828', '#1565c0', '#e67e22', '#00897b'];
+function donut(items, unit) {
+  var list = items.filter(function (i) { return i.value > 0; }), total = list.reduce(function (n, i) { return n + i.value; }, 0);
+  if (!total) return emptyBox('Numbers will appear here once there is data.', 'No data yet', '', '', true);
+  var acc = 0, stops = list.map(function (i, k) { var a = acc / total * 100; acc += i.value; return DONUT_COLORS[k % 8] + ' ' + a.toFixed(2) + '% ' + (acc / total * 100).toFixed(2) + '%'; }).join(', ');
+  return '<div class="donut-wrap"><div class="donut" style="background:conic-gradient(' + stops + ')"><span>' + total + '<small>' + esc(unit || '') + '</small></span></div><div class="legend">' +
+    list.map(function (i, k) { return '<div><i style="background:' + DONUT_COLORS[k % 8] + '"></i>' + esc(i.label) + '<b>' + i.value + '</b></div>'; }).join('') + '</div></div>';
+}
+function statLook(label) {
+  var l = String(label).toLowerCase();
+  if (/lecturer|teacher|staff|administrator/.test(l)) return ['chalk', 'violet'];
+  if (/student|enrol|roll/.test(l)) return ['users', ''];
+  if (/course|credit/.test(l)) return ['book', 'green'];
+  if (/gpa|grade|result/.test(l)) return ['award', 'gold'];
+  if (/fee|paid|balance|owing|collected|required|outstanding/.test(l)) return ['wallet', 'gold'];
+  if (/transcript/.test(l)) return ['file', ''];
+  if (/notification/.test(l)) return ['bell', 'gold'];
+  if (/department|program/.test(l)) return ['building', 'violet'];
+  if (/account|active|deactivated|sign-in/.test(l)) return ['shield', 'green'];
+  return ['chart', ''];
+}
+function buildShell() {
+  var u = state.user;
+  var lastGroup = '';
+  $('sideLinks').innerHTML = MENUS[u.role].map(function (m) {
+    var g = groupOf(u.role, m[0]), head = g && g !== lastGroup ? '<div class="side-group">' + esc(g) + '</div>' : '';
+    lastGroup = g || lastGroup;
+    return head + '<a href="#' + m[0] + '" data-page="' + m[0] + '">' + ico(MENU_ICON[m[0]]) + '<span>' + m[1] + '</span></a>';
+  }).join('');
+  var foot = $('sideFoot');
+  if (foot) foot.innerHTML = avatar(u) + '<div><b>' + esc(u.name) + '</b><small>' + esc(u.role) + '</small></div>';
+  if (!state.obs) { state.obs = new MutationObserver(decoratePage); state.obs.observe($('view'), { childList: true }); }
+  $('footYear').textContent = new Date().getFullYear();
+  $('bell').hidden = u.role === 'admin';
+  refreshTop();
+}
+function refreshTop() {
+  var u = state.user;
+  $('whoName').innerHTML = avatar(u) + '<span>' + esc(u.name) + '</span><span class="role">' + esc(u.role) + '</span>';
+}
+function route() {
+  if (!state.user || $('appScreen').hidden) return;
+  var role = state.user.role, page = location.hash.slice(1) || 'dashboard';
+  if (!MENUS[role].some(function (m) { return m[0] === page; })) page = 'dashboard';
+  state.page = page;
+  document.querySelectorAll('#sideLinks a').forEach(function (a) { a.classList.toggle('active', a.getAttribute('data-page') === page); });
+  var t = ++state.token;
+  $('view').innerHTML = '<div class="loading">Loading...</div>';
+  Promise.resolve().then(function () { return VIEWS[role][page](t); }).catch(function (err) {
+    if (live(t) && state.user) $('view').innerHTML = '<div class="note error">' + esc(err.message) + '</div>';
+  });
+}
+function on(sel, evt, fn) { $('view').querySelectorAll(sel).forEach(function (el) { el.addEventListener(evt, function (e) { fn(el, e); }); }); }
+
+/* ---------- shared pieces ---------- */
+function statCard(n, label, cls, isMoney) { var k = statLook(label); return '<div class="card stat ' + (cls || '') + '"><span class="st-ic ' + k[1] + '">' + ico(k[0]) + '</span><div class="st-t"><div class="num ' + (isMoney ? 'money' : '') + '">' + esc(n) + '</div><div class="lbl">' + esc(label) + '</div></div></div>'; }
+function balClass(total, paid) { var b = Math.round((total - paid) * 100) / 100; return b > 0 ? 'owing' : (b < 0 ? 'credit' : 'cleared'); }
+function balText(total, paid) { var b = Math.round((total - paid) * 100) / 100; return b < 0 ? money(-b) + ' credit' : money(b); }
+function groupByDept(rows, deptOf) {
+  var map = {};
+  rows.forEach(function (r) { var id = deptOf(r) || ''; (map[id] = map[id] || []).push(r); });
+  var out = state.meta.departments.filter(function (d) { return map[d.id]; }).map(function (d) { return { name: d.name, rows: map[d.id] }; });
+  if (map['']) out.push({ name: 'No department', rows: map[''] });
+  return out;
+}
+function groupedTable(headers, groups, rowFn) {
+  if (!groups.length) return emptyBox('Nobody to show here yet.');
+  var html = '<div class="table-wrap"><table><thead><tr>' + headers.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>';
+  groups.forEach(function (g) {
+    html += '<tr class="group"><td colspan="' + headers.length + '">' + esc(g.name) + '<span class="count-pill">' + g.rows.length + '</span></td></tr>';
+    g.rows.forEach(function (r) { html += rowFn(r); });
+  });
+  return html + '</tbody></table></div>';
+}
+function programOptions(selected) {
+  return state.meta.departments.map(function (d) {
+    var ps = state.meta.programs.filter(function (p) { return p.departmentId === d.id; });
+    if (!ps.length) return '';
+    return '<optgroup label="' + esc(d.name) + '">' + ps.map(function (p) { return '<option value="' + esc(p.id) + '"' + (p.id === selected ? ' selected' : '') + '>' + esc(p.name) + '</option>'; }).join('') + '</optgroup>';
+  }).join('');
+}
+function deptOptions(selected, allLabel) {
+  return (allLabel ? '<option value="">' + esc(allLabel) + '</option>' : '') + state.meta.departments.map(function (d) { return '<option value="' + esc(d.id) + '"' + (d.id === selected ? ' selected' : '') + '>' + esc(d.name) + '</option>'; }).join('');
+}
+/* filter bar used by Students, Fees and Transcripts */
+function filterBar(f, withSemester, extra, noProg) {
+  var progs = state.meta.programs.filter(function (p) { return !f.departmentId || p.departmentId === f.departmentId; });
+  return '<div class="toolbar">' +
+    (withSemester ? '<div><label for="fSem">Semester</label><select id="fSem">' + state.meta.semesters.map(function (s) { return '<option value="' + esc(s.id) + '"' + (s.id === f.semesterId ? ' selected' : '') + '>' + esc(s.name) + (s.active ? ' (current)' : '') + '</option>'; }).join('') + '</select></div>' : '') +
+    '<div><label for="fDept">Department</label><select id="fDept">' + deptOptions(f.departmentId, 'All departments') + '</select></div>' +
+    (noProg ? '' : '<div><label for="fProg">Program</label><select id="fProg"><option value="">All programs</option>' + progs.map(function (p) { return '<option value="' + esc(p.id) + '"' + (p.id === f.programId ? ' selected' : '') + '>' + esc(p.name) + '</option>'; }).join('') + '</select></div>') +
+    '<div class="grow"><label for="fSearch">Search name or ' + (noProg ? 'staff ID' : 'roll / registration no.') + '</label><input id="fSearch" type="search" placeholder="Type to search"></div>' + (extra || '') + '</div>';
+}
+function bindFilterBar(f) {
+  var sem = $('fSem');
+  if (sem) sem.addEventListener('change', function () { f.semesterId = sem.value; route(); });
+  $('fDept').addEventListener('change', function () { f.departmentId = this.value; f.programId = ''; route(); });
+  var fp = $('fProg'); if (fp) fp.addEventListener('change', function () { f.programId = this.value; route(); });
+  $('fSearch').addEventListener('input', function () {
+    var q = this.value.trim().toLowerCase();
+    $('view').querySelectorAll('tr[data-search]').forEach(function (tr) { tr.hidden = q && tr.getAttribute('data-search').indexOf(q) < 0; });
+  });
+}
+function whoCell(u) { return '<div class="who-cell">' + avatar(u) + '<div>' + esc(u.name) + '<small>' + esc(u.loginId) + '</small></div></div>'; }
+function searchKey(u) { return esc((u.name + ' ' + u.loginId + ' ' + (u.rollNo || '')).toLowerCase()); }
+
+/* ---------- photo upload (photo is resized in the browser first, to save data) ---------- */
+async function prepPhoto(file) {
+  if (!/^image\//.test(file.type)) throw new Error('Please choose an image file (JPG or PNG).');
+  if (file.size > 25 * 1024 * 1024) throw new Error('That image is too large. Choose a photo under 25 MB.');
+  var bmp;
+  try { bmp = await createImageBitmap(file); }
+  catch (e) {
+    bmp = await new Promise(function (ok, no) { var img = new Image(); img.onload = function () { ok(img); }; img.onerror = function () { no(new Error('That image could not be read. Try a JPG or PNG.')); }; img.src = URL.createObjectURL(file); });
+  }
+  var w = bmp.width, h = bmp.height, s = Math.min(w, h), size = 400, c = document.createElement('canvas');
+  c.width = c.height = size;
+  c.getContext('2d').drawImage(bmp, (w - s) / 2, (h - s) / 2, s, s, 0, 0, size, size);
+  return await new Promise(function (ok, no) { c.toBlob(function (b) { b ? ok(b) : no(new Error('Could not process that image.')); }, 'image/jpeg', 0.85); });
+}
+async function uploadPhoto(file, userId) {
+  var blob = await prepPhoto(file);
+  var r = await api('PUT', userId ? '/api/users/' + encodeURIComponent(userId) + '/photo' : '/api/me/photo', blob, { type: 'image/jpeg' });
+  if (!userId) { state.user = r.user; refreshTop(); }
+  return r.user;
+}
+
+/* =====================  VIEWS  ===================== */
+var VIEWS = { admin: {}, student: {}, lecturer: {}, accounts: {} };
+
+/* ---------- admin: dashboard ---------- */
+/* ---------- helpers: bars, CSV, semester lists ---------- */
+function semOptions(selected) { return state.meta.semesters.map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === selected ? ' selected' : '') + '>' + esc(x.name) + (x.active ? ' (current)' : '') + '</option>'; }).join(''); }
+function currentSemId() { var c = state.meta.semesters.filter(function (x) { return x.active; })[0] || state.meta.semesters[0]; return c ? c.id : ''; }
+function bars(items) {
+  var max = Math.max.apply(null, items.map(function (i) { return i.value; }).concat([1]));
+  if (!items.length) return emptyBox('Numbers will appear here once there is data.', 'No data yet', '', '', true);
+  return '<div class="bars">' + items.map(function (i) {
+    return '<div class="bar-row"><div class="bar-label" title="' + esc(i.label) + '">' + esc(i.label) + '</div><div class="bar-track"><div class="bar-fill" style="width:' + Math.round(i.value / max * 100) + '%"></div></div><div class="bar-val">' + esc(i.value) + '</div></div>';
+  }).join('') + '</div>';
+}
+function downloadCsv(filename, header, rows) {
+  var cell = function (v) { v = v === null || v === undefined ? '' : String(v); if (/^[=+\-@\t\r]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; };
+  var text = '\uFEFF' + [header].concat(rows).map(function (r) { return r.map(cell).join(','); }).join('\r\n');
+  var url = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+  var a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+}
+function section(title, sub, inner) { return '<section class="sec"><div class="sec-head"><h3>' + esc(title) + '</h3>' + (sub ? '<span class="hint" style="margin:0">' + sub + '</span>' : '') + '</div>' + inner + '</section>'; }
+
+/* ---------- admin: dashboard (control over the whole portal) ---------- */
+VIEWS.admin.dashboard = async function (t) {
+  var s = await api('GET', '/api/stats'); if (!live(t)) return;
+  var M = state.meta, sem = s.semester ? s.semester.name : 'No current semester';
+  var cur = M.semesters.filter(function (x) { return x.active; })[0];
+  var steps = [['Create departments', M.departments.length > 0, 'departments'], ['Add programs', M.programs.length > 0, 'programs'], ['Set the current semester', !!s.semester, 'semesters'], ['Add courses', s.courses.total > 0, 'courses'],
+    ['Register lecturers', s.lecturers > 0, 'lecturers'], ['Register students', s.students > 0, 'students'], ['Enter student fees', s.fees.recorded > 0, 'fees'], ['Open course registration', !!(cur && cur.regOpen !== false), 'semesters']];
+  var pct = s.fees.total ? Math.round(s.fees.paid / s.fees.total * 100) : 0;
+  var aside = '<div class="dash-aside">' + todayPanel(sem + (cur ? (cur.regOpen === false ? ' - registration closed' : ' - registration open') : '')) +
+    checklist('Portal setup', steps) +
+    (s.semester ? ringPanel('wallet', 'Fees collected', pct, [['Required', money(s.fees.total)], ['Paid', money(s.fees.paid)], ['Outstanding', money(s.fees.balance)], ['Students owing', s.fees.owing]], ['fees', 'Open']) : '') +
+    panel('building', 'Students by department', donut(s.byDepartment.map(function (d) { return { label: d.name, value: d.students }; }), 'students'), ['departments', 'Open']) +
+    panel('clock', 'Recent activity', s.recent.length ? '<ul class="timeline">' + s.recent.slice(0, 7).map(function (a) { return '<li>' + esc(a.detail) + '<small>' + fmtDate(a.at) + ' &middot; ' + esc(a.byName) + '</small></li>'; }).join('') + '</ul>' : emptyBox('Actions taken in the portal will be listed here.', 'No activity yet', '', '', true), ['audit', 'Audit log']) + '</div>';
+  $('view').innerHTML = hero(greeting() + ', ' + state.user.name, 'Administrator dashboard. Overview of the whole portal.', [sem]) +
+    quickLinks([['students', 'Register student'], ['lecturers', 'Register lecturer'], ['courses', 'Courses and enrolment'], ['announcements', 'Post announcement'], ['fees', 'Update fees'], ['reports', 'Reports']]) +
+    '<div class="dash"><div>' +
+    '<div class="cards">' + statCard(s.students, 'Total registered students') + statCard(s.lecturers, 'Lecturers') + statCard(s.courses.total, 'Courses') + statCard(s.enrollment.enrolledStudents, 'Enrolled this semester') + '</div>' +
+    section('Students and enrolment', sem, '<div class="cards">' + statCard(s.enrollment.notEnrolled, 'Not yet enrolled', s.enrollment.notEnrolled ? 'owing' : 'cleared') + statCard(s.enrollment.totalEnrollments, 'Course enrolments') + statCard(s.accounts.pendingFirstLogin, 'Waiting for first sign-in') + '</div>' +
+      (s.accounts.withoutRollNo ? '<div class="note">' + s.accounts.withoutRollNo + ' student(s) have no roll number yet. Add it with Edit on the Students page.</div>' : '')) +
+    section('Teachers and staff', '', '<div class="cards">' + statCard(s.admins, 'Administrators') + statCard(s.courses.withoutLecturer, 'Courses without a lecturer', s.courses.withoutLecturer ? 'owing' : 'cleared') + statCard(state.meta.departments.length, 'Departments') + statCard(state.meta.programs.length, 'Programs') + '</div>' +
+      (s.byDepartment.length ? '<div class="table-wrap"><table><thead><tr><th>Department</th><th>Students</th><th>Lecturers</th><th>Courses</th></tr></thead><tbody>' +
+      s.byDepartment.map(function (d) { return '<tr><td>' + esc(d.name) + '</td><td>' + d.students + '</td><td>' + d.lecturers + '</td><td>' + d.courses + '</td></tr>'; }).join('') + '</tbody></table></div>' : emptyBox('Create departments to see staff and student numbers per department.', 'No departments yet', 'departments', 'Add a department'))) +
+    section('Courses', '', '<h4 class="mini">Most enrolled courses this semester</h4>' + bars(s.courses.top.map(function (c) { return { label: c.code + ' ' + c.title, value: c.enrolled }; }))) +
+    section('Analytics', '<a href="#reports">Open reports</a>', '<div class="two-col"><div><h4 class="mini">Students by program</h4>' + donut(s.byProgram.map(function (p) { return { label: p.name, value: p.students }; }), 'students') + '</div><div><h4 class="mini">Students by year</h4>' + donut(s.byYear.map(function (y) { return { label: 'Year ' + y.year, value: y.students }; }), 'students') + '</div></div>') +
+    section('User accounts and permissions', '', '<div class="cards">' + statCard(s.accounts.total, 'All accounts') + statCard(s.accounts.active, 'Active') + statCard(s.accounts.inactive, 'Deactivated') + '</div>' +
+      '<p class="hint" style="margin-top:0">Administrators can create, edit, deactivate and reset every account. Lecturers see only their own courses and students. Students see only their own records.</p>') +
+    (s.semester ? section('Fees and transcripts', s.semester.name, '<div class="cards">' + statCard(money(s.fees.total), 'Total fees required', '', true) + statCard(money(s.fees.paid), 'Total paid', '', true) + statCard(money(s.fees.balance), 'Outstanding balance', s.fees.balance > 0 ? 'owing' : 'cleared', true) +
+      statCard(s.fees.owing, 'Students still owing') + statCard(s.transcripts.uploaded + ' / ' + s.transcripts.students, 'Transcripts sent') + '</div>') : '<div class="note">No current semester is set. Create one under Semesters.</div>') +
+    '<p class="hint">Fee amounts are shown in ' + esc(state.meta.settings.currency) + '. Change the currency under Settings.</p></div>' + aside + '</div>';
+};
+
+/* ---------- admin: courses and enrolment ---------- */
+VIEWS.admin.courses = async function (t) {
+  var f = ui.courses; if (!f.semesterId) f.semesterId = currentSemId();
+  var res = await Promise.all([api('GET', '/api/courses?' + qs({ semesterId: f.semesterId, departmentId: f.departmentId })), api('GET', '/api/users?role=lecturer')]); if (!live(t)) return;
+  var courses = res[0].courses, lecturers = res[1].users;
+  var lecOpts = function (sel) { return '<option value="">No lecturer yet</option>' + lecturers.map(function (l) { return '<option value="' + esc(l.id) + '"' + (l.id === sel ? ' selected' : '') + '>' + esc(l.name) + ' (' + esc(l.loginId) + ')</option>'; }).join(''); };
+  var progOpts = function (sel) { return '<option value="">Any program</option>' + programOptions(sel); };
+  var form = function (c) {
+    c = c || {};
+    return '<div class="two"><div><label>Course code</label><input name="code" required maxlength="20" placeholder="e.g. IT101" value="' + esc(c.code || '') + '"></div><div><label>Credits</label><input name="credits" type="number" min="0" max="30" value="' + esc(c.credits === undefined ? 3 : c.credits) + '"></div></div>' +
+      '<label>Course title</label><input name="title" required maxlength="120" value="' + esc(c.title || '') + '">' +
+      '<label>Department</label><select name="departmentId">' + deptOptions(c.departmentId || f.departmentId, '') + '</select>' +
+      '<label>Program (optional)</label><select name="programId">' + progOpts(c.programId) + '</select>' +
+      '<div class="two"><div><label>Year (optional)</label><input name="year" type="number" min="1" max="8" value="' + esc(c.year || '') + '"></div><div><label>Lecturer</label><select name="lecturerId">' + lecOpts(c.lecturerId) + '</select></div></div><p class="hint" style="margin:4px 0 0">You can leave the lecturer empty. Lecturers can also pick the courses they teach from their own department.</p>';
+  };
+  $('view').innerHTML = '<h2>Courses</h2><div class="toolbar"><div><label for="cSem">Semester (for enrolment counts)</label><select id="cSem">' + semOptions(f.semesterId) + '</select></div>' +
+    '<div><label for="cDept">Department</label><select id="cDept">' + deptOptions(f.departmentId, 'All departments') + '</select></div><div class="push"><button id="addCourse" type="button">Add course</button></div></div>' +
+    (courses.length ? '<div class="table-wrap"><table><thead><tr><th>Code</th><th>Course</th><th>Department / program</th><th>Year</th><th>Lecturer</th><th>Enrolled</th><th></th></tr></thead><tbody>' +
+      courses.map(function (c) {
+        return '<tr><td><b>' + esc(c.code) + '</b></td><td>' + esc(c.title) + '<br><small class="hint">' + esc(c.credits) + ' credits</small></td><td>' + esc(c.departmentName) + (c.programName ? '<br><small class="hint">' + esc(c.programName) + '</small>' : '') + '</td><td>' + esc(c.year || '-') + '</td>' +
+          '<td>' + (c.lecturerName ? esc(c.lecturerName) : '<span class="pill warn">None</span>') + '</td><td>' + c.enrolled + '</td>' +
+          '<td class="actions"><button class="small secondary" data-cstu="' + esc(c.id) + '">Students</button><button class="small secondary" data-cenr="' + esc(c.id) + '">Enrol</button><button class="small secondary" data-cedit="' + esc(c.id) + '">Edit</button><button class="small danger" data-cdel="' + esc(c.id) + '">Delete</button></td></tr>';
+      }).join('') + '</tbody></table></div>' : emptyBox('No courses yet. Click "Add course".'));
+  $('cSem').addEventListener('change', function () { f.semesterId = this.value; route(); });
+  $('cDept').addEventListener('change', function () { f.departmentId = this.value; route(); });
+  var find = function (id) { return courses.filter(function (c) { return c.id === id; })[0]; };
+  $('addCourse').addEventListener('click', function () {
+    if (!state.meta.departments.length) return toast('Create a department first.', 'error');
+    openModal('Add a course', form(), async function (fm) { await api('POST', '/api/courses', formVals(fm)); toast('Course added.', 'ok'); return function () { route(); }; }, 'Add');
+  });
+  on('[data-cedit]', 'click', function (b) {
+    var c = find(b.getAttribute('data-cedit'));
+    openModal('Edit course', form(c), async function (fm) { await api('PUT', '/api/courses/' + encodeURIComponent(c.id), formVals(fm)); toast('Saved.', 'ok'); return function () { route(); }; });
+  });
+  on('[data-cdel]', 'click', function (b) {
+    var c = find(b.getAttribute('data-cdel'));
+    if (confirm('Delete the course ' + c.code + '? Its enrolments will be removed too.')) api('DELETE', '/api/courses/' + encodeURIComponent(c.id)).then(function () { toast('Deleted.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+  });
+  on('[data-cenr]', 'click', function (b) {
+    var c = find(b.getAttribute('data-cenr'));
+    openModal('Enrol students in ' + c.code,
+      '<label>Semester</label><select name="semesterId">' + semOptions(f.semesterId) + '</select>' +
+      '<label>All students of a program</label><select name="programId">' + progOpts(c.programId) + '</select>' +
+      '<label>Only year (optional)</label><input name="year" type="number" min="1" max="8" value="' + esc(c.year || '') + '">' +
+      '<label>Or specific students: roll numbers separated by commas</label><input name="rolls" placeholder="e.g. 0101, 0102, 0103"><p class="hint">If you type roll numbers, only those students are enrolled. Students already enrolled are skipped.</p>',
+      async function (fm) {
+        var v = formVals(fm), body = { semesterId: v.semesterId };
+        if (v.rolls && v.rolls.trim()) {
+          var all = (await api('GET', '/api/users?role=student')).users, want = v.rolls.split(',').map(function (x) { return x.trim().toLowerCase(); }).filter(Boolean);
+          var ids = [], missing = [];
+          want.forEach(function (r) { var u = all.filter(function (x) { return (x.rollNo || '').toLowerCase() === r; })[0]; if (u) ids.push(u.id); else missing.push(r); });
+          if (missing.length) throw new Error('No student has the roll number: ' + missing.join(', '));
+          body.studentIds = ids;
+        } else { body.programId = v.programId; if (v.year) body.year = Number(v.year); }
+        var r = await api('POST', '/api/courses/' + encodeURIComponent(c.id) + '/enroll', body);
+        toast(r.added + ' enrolled' + (r.skipped ? ', ' + r.skipped + ' already enrolled' : '') + '.', 'ok');
+        return function () { route(); };
+      }, 'Enrol');
+  });
+  on('[data-cstu]', 'click', async function (b) {
+    var c = find(b.getAttribute('data-cstu'));
+    try {
+      var r = await api('GET', '/api/courses/' + encodeURIComponent(c.id) + '/students?semesterId=' + encodeURIComponent(f.semesterId));
+      openModal(c.code + ' students', (r.rows.length ? '<div class="table-wrap"><table><thead><tr><th>Name</th><th>Roll No.</th><th></th></tr></thead><tbody>' + r.rows.map(function (u) { return '<tr><td>' + esc(u.name) + '<br><small class="hint">' + esc(u.loginId) + '</small></td><td>' + esc(u.rollNo || '-') + '</td><td><button type="button" class="small danger" data-unenrol="' + esc(u.id) + '">Remove</button></td></tr>'; }).join('') + '</tbody></table></div>' : '<div class="empty">Nobody is enrolled for this semester.</div>'),
+        async function () { return function () { route(); }; }, 'Close', true);
+      $('modalRoot').querySelectorAll('[data-unenrol]').forEach(function (x) {
+        x.addEventListener('click', function () {
+          api('DELETE', '/api/courses/' + encodeURIComponent(c.id) + '/enroll/' + encodeURIComponent(x.getAttribute('data-unenrol')) + '?semesterId=' + encodeURIComponent(f.semesterId)).then(function () { x.closest('tr').remove(); toast('Removed.', 'ok'); }).catch(function (err) { toast(err.message, 'error'); });
+        });
+      });
+    } catch (err) { toast(err.message, 'error'); }
+  });
+};
+
+/* ---------- admin: reports and analytics ---------- */
+VIEWS.admin.reports = async function (t) {
+  var f = ui.reports; if (!f.semesterId) f.semesterId = currentSemId();
+  var s = await api('GET', '/api/stats'); if (!live(t)) return;
+  $('view').innerHTML = '<h2>Reports and analytics</h2>' +
+    section('Download as Excel (CSV) files', '', '<div class="toolbar"><div><label for="rSem">Semester</label><select id="rSem">' + semOptions(f.semesterId) + '</select></div>' +
+      '<div class="push"><button type="button" class="secondary" id="dlStu">Students list</button> <button type="button" class="secondary" id="dlLec">Lecturers list</button> <button type="button" class="secondary" id="dlCou">Courses and enrolment</button> <button type="button" class="secondary" id="dlFee">Fees</button></div></div>') +
+    section('Students by department', '', bars(s.byDepartment.map(function (d) { return { label: d.name, value: d.students }; }))) +
+    section('Students by program', '', bars(s.byProgram.map(function (p) { return { label: p.name, value: p.students }; }))) +
+    section('Students by year', '', bars(s.byYear.map(function (y) { return { label: 'Year ' + y.year, value: y.students }; }))) +
+    section('Enrolment per course', s.semester ? s.semester.name : '', bars(s.courses.top.map(function (c) { return { label: c.code + ' ' + c.title, value: c.enrolled }; })));
+  $('rSem').addEventListener('change', function () { f.semesterId = this.value; });
+  var m = state.meta, semName = function () { return nameOf(m.semesters, f.semesterId).replace(/[^A-Za-z0-9]+/g, '-'); };
+  $('dlStu').addEventListener('click', async function () {
+    var u = (await api('GET', '/api/users?role=student')).users;
+    downloadCsv('students.csv', ['Name', 'Registration no.', 'Roll no.', 'Department', 'Program', 'Year', 'Phone', 'Status'], u.map(function (x) { return [x.name, x.loginId, x.rollNo, nameOf(m.departments, x.departmentId), nameOf(m.programs, x.programId), x.year, x.phone, x.active ? 'Active' : 'Inactive']; }));
+  });
+  $('dlLec').addEventListener('click', async function () {
+    var u = (await api('GET', '/api/users?role=lecturer')).users;
+    downloadCsv('lecturers.csv', ['Name', 'Staff ID', 'Department', 'Phone', 'Status'], u.map(function (x) { return [x.name, x.loginId, x.departmentId ? nameOf(m.departments, x.departmentId) : '', x.phone, x.active ? 'Active' : 'Inactive']; }));
+  });
+  $('dlCou').addEventListener('click', async function () {
+    var c = (await api('GET', '/api/courses?semesterId=' + encodeURIComponent(f.semesterId))).courses;
+    downloadCsv('courses-' + semName() + '.csv', ['Code', 'Title', 'Department', 'Program', 'Year', 'Credits', 'Lecturer', 'Enrolled'], c.map(function (x) { return [x.code, x.title, x.departmentName, x.programName, x.year, x.credits, x.lecturerName, x.enrolled]; }));
+  });
+  $('dlFee').addEventListener('click', async function () {
+    var r = (await api('GET', '/api/fees?semesterId=' + encodeURIComponent(f.semesterId))).rows;
+    downloadCsv('fees-' + semName() + '.csv', ['Name', 'Registration no.', 'Roll no.', 'Total required', 'Paid', 'Balance'], r.map(function (x) { return [x.student.name, x.student.loginId, x.student.rollNo, x.fee ? x.fee.total : '', x.fee ? x.fee.paid : '', x.fee ? x.fee.balance : '']; }));
+  });
+};
+
+/* ---------- admin: departments ---------- */
+VIEWS.admin.departments = async function (t) {
+  var db = state.meta;
+  $('view').innerHTML = '<h2>Departments</h2><form id="depForm" class="toolbar"><div class="grow"><label for="depName">New department</label><input id="depName" required maxlength="100"></div><div class="push"><button type="submit">Add department</button></div></form>' +
+    '<div class="table-wrap"><table><thead><tr><th>Department</th><th>Programs</th><th>Students</th><th></th></tr></thead><tbody>' +
+    db.departments.map(function (d) {
+      return '<tr><td>' + esc(d.name) + '</td><td>' + db.programs.filter(function (p) { return p.departmentId === d.id; }).length + '</td><td id="dc-' + esc(d.id) + '">-</td><td class="actions"><button class="small secondary" data-rename="' + esc(d.id) + '">Rename</button> <button class="small danger" data-del="' + esc(d.id) + '">Delete</button></td></tr>';
+    }).join('') + '</tbody></table></div>';
+  $('depForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    try { await api('POST', '/api/departments', { name: $('depName').value }); await reloadMeta(); toast('Department added.', 'ok'); route(); } catch (err) { toast(err.message, 'error'); }
+  });
+  on('[data-rename]', 'click', function (b) {
+    var d = db.departments.filter(function (x) { return x.id === b.getAttribute('data-rename'); })[0];
+    var name = prompt('New name for this department:', d.name);
+    if (name && name.trim()) api('PUT', '/api/departments/' + encodeURIComponent(d.id), { name: name }).then(reloadMeta).then(function () { toast('Renamed.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+  });
+  on('[data-del]', 'click', function (b) {
+    var d = db.departments.filter(function (x) { return x.id === b.getAttribute('data-del'); })[0];
+    if (confirm('Delete the department "' + d.name + '"?')) api('DELETE', '/api/departments/' + encodeURIComponent(d.id)).then(reloadMeta).then(function () { toast('Deleted.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+  });
+  var st = await api('GET', '/api/stats'); if (!live(t)) return;
+  st.byDepartment.forEach(function (d) { var c = $('dc-' + d.id); if (c) c.textContent = d.students; });
+};
+
+/* ---------- admin: programs ---------- */
+function programForm(p) {
+  p = p || { name: '', departmentId: '', level: 'Bachelor', years: 4 };
+  return '<label>Program name</label><input name="name" required maxlength="120" value="' + esc(p.name) + '">' +
+    '<label>Department</label><select name="departmentId">' + deptOptions(p.departmentId) + '</select>' +
+    '<div class="two"><div><label>Level</label><select name="level">' + ['Diploma', 'Bachelor', 'Master', 'PhD'].map(function (l) { return '<option' + (l === p.level ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></div>' +
+    '<div><label>Years</label><input name="years" type="number" min="1" max="8" value="' + esc(p.years) + '"></div></div>';
+}
+VIEWS.admin.programs = async function (t) {
+  var db = state.meta;
+  var groups = groupByDept(db.programs, function (p) { return p.departmentId; });
+  $('view').innerHTML = '<h2>Programs</h2><div class="toolbar"><div class="push"><button id="addProg" type="button">Add program</button></div></div>' +
+    groupedTable(['Program', 'Level', 'Years', ''], groups, function (p) {
+      return '<tr><td>' + esc(p.name) + '</td><td>' + esc(p.level) + '</td><td>' + p.years + '</td><td class="actions"><button class="small secondary" data-edit="' + esc(p.id) + '">Edit</button> <button class="small danger" data-del="' + esc(p.id) + '">Delete</button></td></tr>';
+    });
+  $('addProg').addEventListener('click', function () {
+    openModal('Add a program', programForm(), async function (form) {
+      var v = formVals(form); v.years = Number(v.years);
+      await api('POST', '/api/programs', v); await reloadMeta(); toast('Program added.', 'ok'); return function () { route(); };
+    }, 'Add program');
+  });
+  on('[data-edit]', 'click', function (b) {
+    var p = db.programs.filter(function (x) { return x.id === b.getAttribute('data-edit'); })[0];
+    openModal('Edit program', programForm(p), async function (form) {
+      var v = formVals(form); v.years = Number(v.years);
+      await api('PUT', '/api/programs/' + encodeURIComponent(p.id), v); await reloadMeta(); toast('Saved.', 'ok'); return function () { route(); };
+    });
+  });
+  on('[data-del]', 'click', function (b) {
+    var p = db.programs.filter(function (x) { return x.id === b.getAttribute('data-del'); })[0];
+    if (confirm('Delete the program "' + p.name + '"?')) api('DELETE', '/api/programs/' + encodeURIComponent(p.id)).then(reloadMeta).then(function () { toast('Deleted.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+  });
+};
+
+/* ---------- admin: semesters ---------- */
+VIEWS.admin.semesters = async function (t) {
+  var db = state.meta;
+  $('view').innerHTML = '<h2>Semesters</h2><form id="semForm" class="toolbar"><div class="grow"><label for="semName">New semester</label><input id="semName" required maxlength="60" placeholder="2026/27 Semester 2"></div><div class="push"><button type="submit">Add semester</button></div></form>' +
+    '<div class="table-wrap"><table><thead><tr><th>Semester</th><th>Status</th><th>Course registration</th><th></th></tr></thead><tbody>' +
+    db.semesters.map(function (s) {
+      var open = s.regOpen !== false;
+      return '<tr><td>' + esc(s.name) + '</td><td>' + (s.active ? '<span class="pill ok">Current</span>' : '-') + '</td><td>' + (open ? '<span class="pill ok">Open</span>' : '<span class="pill off">Closed</span>') + ' <small class="hint">max ' + (s.maxCredits || 24) + ' credits</small></td><td class="actions"><button class="small secondary" data-reg="' + esc(s.id) + '">' + (open ? 'Close registration' : 'Open registration') + '</button><button class="small secondary" data-cred="' + esc(s.id) + '">Max credits</button>' +
+        (s.active ? '' : '<button class="small" data-act="' + esc(s.id) + '">Make current</button> ') + '<button class="small danger" data-del="' + esc(s.id) + '">Delete</button></td></tr>';
+    }).join('') + '</tbody></table></div><p class="hint">The current semester is the one shown first on the Fees and Transcripts pages. When registration is closed, students cannot pick or drop courses.</p>';
+  $('semForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    try { await api('POST', '/api/semesters', { name: $('semName').value }); await reloadMeta(); toast('Semester added.', 'ok'); route(); } catch (err) { toast(err.message, 'error'); }
+  });
+  on('[data-reg]', 'click', function (b) {
+    var s = db.semesters.filter(function (x) { return x.id === b.getAttribute('data-reg'); })[0];
+    api('PUT', '/api/semesters/' + encodeURIComponent(s.id) + '/registration', { regOpen: s.regOpen === false }).then(reloadMeta).then(function () { toast('Saved.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+  });
+  on('[data-cred]', 'click', function (b) {
+    var s = db.semesters.filter(function (x) { return x.id === b.getAttribute('data-cred'); })[0];
+    var v = prompt('Maximum credits a student may pick in ' + s.name + ':', s.maxCredits || 24); if (v === null) return;
+    api('PUT', '/api/semesters/' + encodeURIComponent(s.id) + '/registration', { maxCredits: v }).then(reloadMeta).then(function () { toast('Saved.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+  });
+  on('[data-act]', 'click', function (b) { api('POST', '/api/semesters/' + encodeURIComponent(b.getAttribute('data-act')) + '/activate').then(reloadMeta).then(function () { toast('Current semester changed.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); }); });
+  on('[data-del]', 'click', function (b) {
+    if (confirm('Delete this semester?')) api('DELETE', '/api/semesters/' + encodeURIComponent(b.getAttribute('data-del'))).then(reloadMeta).then(function () { toast('Deleted.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+  });
+};
+
+/* ---------- admin: settings ---------- */
+VIEWS.admin.settings = async function (t) {
+  $('view').innerHTML = '<h2>Settings</h2><form id="setForm" class="card" style="max-width:420px"><label for="setCur">Currency used for fees (for example USD or SSP)</label><input id="setCur" maxlength="6" required value="' + esc(state.meta.settings.currency) + '"><label style="display:flex;gap:8px;align-items:flex-start;margin-top:14px"><input type="checkbox" id="setBlock" style="width:auto;margin-top:3px"' + (state.meta.settings.blockPickIfOwing ? ' checked' : '') + '><span>Do not let students pick courses while they owe fees</span></label><p><button type="submit">Save</button></p></form>';
+  $('setForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    try { await api('PUT', '/api/settings', { currency: $('setCur').value, blockPickIfOwing: $('setBlock').checked }); await reloadMeta(); toast('Saved.', 'ok'); } catch (err) { toast(err.message, 'error'); }
+  });
+};
+
+/* ---------- admin: students ---------- */
+function studentRow(u) {
+  return '<tr data-search="' + searchKey(u) + '" class="' + (u.active ? '' : 'inactive') + '"><td>' + whoCell(u) + '</td><td>' + esc(u.rollNo || '-') + '</td><td>' + esc(nameOf(state.meta.programs, u.programId)) + '</td><td>' + esc(u.year || '') + '</td><td>' + esc(u.phone || '-') + '</td>' +
+    '<td>' + (u.active ? '<span class="pill ok">Active</span>' : '<span class="pill off">Inactive</span>') + '</td>' +
+    '<td class="actions"><button class="small secondary" data-edit="' + esc(u.id) + '">Edit</button><label class="btn small secondary">Photo<input type="file" accept="image/*" data-photo="' + esc(u.id) + '"></label>' +
+    '<button class="small secondary" data-reset="' + esc(u.id) + '">Reset password</button><button class="small secondary" data-toggle="' + esc(u.id) + '">' + (u.active ? 'Deactivate' : 'Activate') + '</button><button class="small danger" data-del="' + esc(u.id) + '">Delete</button></td></tr>';
+}
+function bindPeopleActions(users) {
+  var find = function (id) { return users.filter(function (u) { return u.id === id; })[0]; };
+  on('[data-reset]', 'click', function (b) {
+    var u = find(b.getAttribute('data-reset'));
+    if (!confirm('Reset the password for ' + u.name + '? They will be signed out everywhere.')) return;
+    api('POST', '/api/users/' + encodeURIComponent(u.id) + '/reset-password').then(function (r) { showCredentials('New temporary password', u.loginId, r.tempPassword); }).catch(function (err) { toast(err.message, 'error'); });
+  });
+  on('[data-toggle]', 'click', function (b) {
+    var u = find(b.getAttribute('data-toggle'));
+    if (u.active && !confirm('Deactivate ' + u.name + '? They will not be able to sign in.')) return;
+    api('PUT', '/api/users/' + encodeURIComponent(u.id), { active: !u.active }).then(function () { toast(u.active ? 'Deactivated.' : 'Activated.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+  });
+  on('[data-del]', 'click', function (b) {
+    var u = find(b.getAttribute('data-del'));
+    if (!confirm('Permanently delete ' + u.name + ' (' + u.loginId + ')? Their fees, transcripts and photo will be removed too. This cannot be undone.')) return;
+    api('DELETE', '/api/users/' + encodeURIComponent(u.id)).then(function () { toast('Deleted.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+  });
+  on('[data-photo]', 'change', function (inp) {
+    var file = inp.files[0]; if (!file) return;
+    uploadPhoto(file, inp.getAttribute('data-photo')).then(function () { toast('Photo saved.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+  });
+}
+VIEWS.admin.students = async function (t) {
+  var f = ui.students;
+  var data = await api('GET', '/api/users?' + qs({ role: 'student', departmentId: f.departmentId, programId: f.programId })); if (!live(t)) return;
+  var users = data.users;
+  $('view').innerHTML = '<h2>Students</h2>' + filterBar(f, false, '<div class="push"><button id="impStu" type="button" class="secondary">Import list</button> <button id="addStu" type="button">Register student</button></div>') +
+    '<p class="hint">' + users.length + ' student(s), arranged by department.</p>' +
+    groupedTable(['Student', 'Roll No.', 'Program', 'Year', 'Phone', 'Status', ''], groupByDept(users, function (u) { return u.departmentId; }), studentRow);
+  bindFilterBar(f);
+  bindPeopleActions(users);
+  $('impStu').addEventListener('click', openImport);
+  $('addStu').addEventListener('click', function () {
+    if (!state.meta.programs.length) return toast('Create a program first.', 'error');
+    openModal('Register a student',
+      '<label>Full name</label><input name="name" required maxlength="80"><label>Registration number</label><input name="loginId" required maxlength="30" placeholder="e.g. STU2026010"><label>Roll number</label><input name="rollNo" required maxlength="20" placeholder="e.g. 0123">' +
+      '<label>Program</label><select name="programId">' + programOptions(f.programId) + '</select>' +
+      '<div class="two"><div><label>Year</label><input name="year" type="number" min="1" max="8" value="1"></div><div><label>Phone (optional)</label><input name="phone" placeholder="+211 ..."></div></div>' +
+      '<label>Password (leave empty to generate one)</label><input name="password" autocomplete="off">',
+      async function (form) {
+        var v = formVals(form); v.role = 'student'; v.year = Number(v.year);
+        var r = await api('POST', '/api/users', v);
+        return function () { showCredentials('Student registered', r.user.loginId, r.tempPassword); route(); };
+      }, 'Register');
+  });
+  on('[data-edit]', 'click', function (b) {
+    var u = users.filter(function (x) { return x.id === b.getAttribute('data-edit'); })[0];
+    openModal('Edit student',
+      '<label>Full name</label><input name="name" required maxlength="80" value="' + esc(u.name) + '"><label>Registration number</label><input name="loginId" required maxlength="30" value="' + esc(u.loginId) + '"><label>Roll number</label><input name="rollNo" maxlength="20" value="' + esc(u.rollNo || '') + '">' +
+      '<label>Program</label><select name="programId">' + programOptions(u.programId) + '</select>' +
+      '<div class="two"><div><label>Year</label><input name="year" type="number" min="1" max="8" value="' + esc(u.year || 1) + '"></div><div><label>Phone</label><input name="phone" value="' + esc(u.phone) + '"></div></div>',
+      async function (form) {
+        var v = formVals(form); v.year = Number(v.year);
+        await api('PUT', '/api/users/' + encodeURIComponent(u.id), v); toast('Saved.', 'ok'); return function () { route(); };
+      });
+  });
+};
+
+/* ---------- admin: lecturers (same layout and format as students) ---------- */
+function lecturerRow(u) {
+  return '<tr data-search="' + searchKey(u) + '" class="' + (u.active ? '' : 'inactive') + '"><td>' + whoCell(u) + '</td><td>' + esc(u.phone || '-') + '</td>' +
+    '<td>' + (u.active ? '<span class="pill ok">Active</span>' : '<span class="pill off">Inactive</span>') + '</td>' +
+    '<td class="actions"><button class="small secondary" data-edit="' + esc(u.id) + '">Edit</button><label class="btn small secondary">Photo<input type="file" accept="image/*" data-photo="' + esc(u.id) + '"></label>' +
+    '<button class="small secondary" data-reset="' + esc(u.id) + '">Reset password</button><button class="small secondary" data-toggle="' + esc(u.id) + '">' + (u.active ? 'Deactivate' : 'Activate') + '</button><button class="small danger" data-del="' + esc(u.id) + '">Delete</button></td></tr>';
+}
+VIEWS.admin.lecturers = async function (t) {
+  var f = ui.lecturers;
+  var data = await api('GET', '/api/users?' + qs({ role: 'lecturer', departmentId: f.departmentId })); if (!live(t)) return;
+  var users = data.users;
+  $('view').innerHTML = '<h2>Lecturers</h2>' + filterBar(f, false, '<div class="push"><button id="addLec" type="button">Register lecturer</button></div>', true) +
+    '<p class="hint">' + users.length + ' lecturer(s), arranged by department.</p>' +
+    groupedTable(['Lecturer', 'Phone', 'Status', ''], groupByDept(users, function (u) { return u.departmentId; }), lecturerRow);
+  bindFilterBar(f);
+  bindPeopleActions(users);
+  $('addLec').addEventListener('click', function () {
+    openModal('Register a lecturer',
+      '<label>Full name</label><input name="name" required maxlength="80"><label>Staff ID</label><input name="loginId" required maxlength="30" placeholder="e.g. LEC010">' +
+      '<label>Department</label><select name="departmentId">' + deptOptions(f.departmentId, '') + '</select><p class="hint" style="margin:4px 0 0">The lecturer will pick the courses he teaches from this department.</p>' +
+      '<label>Phone (optional)</label><input name="phone" placeholder="+211 ...">' +
+      '<label>Password (leave empty to generate one)</label><input name="password" autocomplete="off">',
+      async function (form) {
+        var v = formVals(form); v.role = 'lecturer';
+        var r = await api('POST', '/api/users', v);
+        return function () { showCredentials('Lecturer registered', r.user.loginId, r.tempPassword); route(); };
+      }, 'Register');
+  });
+  on('[data-edit]', 'click', function (b) {
+    var u = users.filter(function (x) { return x.id === b.getAttribute('data-edit'); })[0];
+    openModal('Edit lecturer',
+      '<label>Full name</label><input name="name" required maxlength="80" value="' + esc(u.name) + '"><label>Staff ID</label><input name="loginId" required maxlength="30" value="' + esc(u.loginId) + '">' +
+      '<label>Department</label><select name="departmentId">' + deptOptions(u.departmentId, '') + '</select>' +
+      '<label>Phone</label><input name="phone" value="' + esc(u.phone) + '">',
+      async function (form) {
+        await api('PUT', '/api/users/' + encodeURIComponent(u.id), formVals(form)); toast('Saved.', 'ok'); return function () { route(); };
+      });
+  });
+};
+
+/* ---------- admin: administrators ---------- */
+function staffView(role, title, addLabel, idHint, note) {
+  return async function (t) {
+  var data = await api('GET', '/api/users?role=' + role); if (!live(t)) return;
+  var users = data.users;
+  $('view').innerHTML = '<h2>' + title + '</h2><div class="toolbar"><div class="push"><button id="addAdm" type="button">' + addLabel + '</button></div></div>' + (note ? '<p class="hint" style="margin-top:0">' + note + '</p>' : '') +
+    '<div class="table-wrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Status</th><th></th></tr></thead><tbody>' +
+    users.map(function (u) {
+      var me = u.id === state.user.id;
+      return '<tr class="' + (u.active ? '' : 'inactive') + '"><td>' + whoCell(u) + '</td><td>' + esc(u.phone || '-') + '</td>' +
+        '<td>' + (u.active ? '<span class="pill ok">Active</span>' : '<span class="pill off">Inactive</span>') + '</td><td class="actions">' +
+        (me ? '(you)' : '<button class="small secondary" data-reset="' + esc(u.id) + '">Reset password</button><button class="small secondary" data-toggle="' + esc(u.id) + '">' + (u.active ? 'Deactivate' : 'Activate') + '</button><button class="small danger" data-del="' + esc(u.id) + '">Delete</button>') + '</td></tr>';
+    }).join('') + '</tbody></table></div>';
+  bindPeopleActions(users);
+  $('addAdm').addEventListener('click', function () {
+    openModal(addLabel,
+      '<label>Full name</label><input name="name" required maxlength="80"><label>Staff ID</label><input name="loginId" required maxlength="30" placeholder="' + idHint + '">' +
+      '<label>Phone (optional)</label><input name="phone"><label>Password (leave empty to generate one)</label><input name="password" autocomplete="off">',
+      async function (form) {
+        var v = formVals(form); v.role = role;
+        var r = await api('POST', '/api/users', v);
+        return function () { showCredentials('Account created', r.user.loginId, r.tempPassword); route(); };
+      }, 'Add');
+  });
+  };
+}
+VIEWS.admin.admins = staffView('admin', 'Administrators', 'Add administrator', 'e.g. ADM002');
+VIEWS.admin.accountsstaff = staffView('accounts', 'Accounts Staff', 'Add accounts staff member', 'e.g. ACC001', 'Accounts staff can update student fees and see fee reports. They cannot change anything else.');
+
+/* ---------- announcements: the admin writes them, everyone reads what is meant for them ---------- */
+var AUD = { all: 'Everyone', student: 'Students', lecturer: 'Lecturers' };
+function ago(ts) {
+  var m = Math.round((Date.now() - ts) / 60000);
+  if (m < 1) return 'Just now'; if (m < 60) return m + ' min ago';
+  var h = Math.round(m / 60); if (h < 24) return h + (h === 1 ? ' hour ago' : ' hours ago');
+  var d = Math.round(h / 24); if (d < 7) return d + (d === 1 ? ' day ago' : ' days ago');
+  return fmtDate(ts);
+}
+function nameAvatar(name, role) {
+  var ini = String(name || '?').split(/\s+/).filter(Boolean).slice(0, 2).map(function (w) { return w[0].toUpperCase(); }).join('');
+  return '<span class="avatar sm ' + esc(role) + '" data-initials="' + esc(ini) + '"></span>';
+}
+function postCard(a, full) {
+  var role = a.byRole === 'lecturer' ? 'Lecturer' : 'Administration';
+  return '<article class="post' + (a.unread ? ' unread' : '') + (a.pinned ? ' pinned' : '') + '"><div class="post-head">' + nameAvatar(a.by, a.byRole) +
+    '<div class="who2"><b>' + esc(a.by) + '</b> <span class="pill ' + (a.byRole === 'lecturer' ? 'warn' : 'info') + '">' + role + '</span><span class="when">' + ago(a.at) + ' &middot; for ' + esc((AUD[a.audience] || a.audience).toLowerCase()) + (a.pinned ? ' &middot; Pinned' : '') + '</span></div>' +
+    (a.unread ? '<span class="tag-new">NEW</span>' : '') +
+    (full && (a.canDelete || state.user.role === 'admin') ? '<div class="acts">' + (state.user.role === 'admin' ? '<button class="small secondary" data-annpin="' + esc(a.id) + '">' + (a.pinned ? 'Unpin' : 'Pin') + '</button>' : '') + (a.canDelete ? '<button class="small danger" data-annrm="' + esc(a.id) + '">Delete</button>' : '') + '</div>' : '') +
+    '</div><h4>' + esc(a.title) + '</h4><p class="body">' + esc(a.body) + '</p></article>';
+}
+async function latestPosts() {
+  var r = await api('GET', '/api/announcements', undefined, { quiet: true });
+  var list = r.announcements.slice(0, 3);
+  return '<h3>Latest announcements</h3><div class="feed">' + (list.length ? list.map(function (a) { return postCard(a, false); }).join('') + '<p><a href="#announcements">See all announcements &rarr;</a></p>' : emptyBox('News from the university and your lecturers will appear here.', 'No announcements yet')) + '</div>';
+}
+function hero(title, sub, chips) {
+  return '<section class="hero"><h2>' + esc(title) + '</h2><p>' + esc(sub) + '</p>' + (chips && chips.length ? '<div class="chips">' + chips.filter(Boolean).map(function (c) { return '<span class="chip">' + esc(c) + '</span>'; }).join('') + '</div>' : '') + '</section>';
+}
+function greeting() { var h = new Date().getHours(); return h < 12 ? 'Good morning' : (h < 17 ? 'Good afternoon' : 'Good evening'); }
+function quickLinks(list) { return '<div class="quick">' + list.map(function (q) { return '<a href="#' + q[0] + '">' + esc(q[1]) + '</a>'; }).join('') + '</div>'; }
+function setAnnBadge(n) {
+  var a = document.querySelector('#sideLinks a[data-page="announcements"]'); if (!a) return;
+  var old = a.querySelector('.count'); if (old) old.remove();
+  if (n) { var sp = document.createElement('span'); sp.className = 'count'; sp.textContent = n; a.appendChild(sp); }
+}
+async function pollAnn() {
+  if (!state.user || document.hidden) return;
+  try { var r = await api('GET', '/api/announcements/count', undefined, { quiet: true }); setAnnBadge(r.unread); } catch (e) { /* try again next time */ }
+}
+['admin', 'student', 'lecturer', 'accounts'].forEach(function (role) {
+  VIEWS[role].announcements = async function (t) {
+    var r = await api('GET', '/api/announcements'); if (!live(t)) return;
+    var canPost = role === 'admin' || role === 'lecturer', me = state.user;
+    var audOpts = role === 'admin' ? '<option value="all">Everyone</option><option value="student">Students only</option><option value="lecturer">Lecturers only</option>' : '<option value="student">My students</option><option value="lecturer">Other lecturers</option>';
+    $('view').innerHTML = '<h2>Announcements</h2><div class="dash"><div>' +
+      (canPost ? '<form id="annForm" class="composer"><div class="post-head" style="margin-bottom:6px">' + nameAvatar(me.name, role) + '<div class="who2"><b>' + esc(me.name) + '</b><span class="when">Write a new announcement</span></div></div>' +
+        '<input id="annTitle" required maxlength="120" placeholder="Title (for example: Exams start on Monday)"><textarea id="annBody" required maxlength="3000" rows="3" placeholder="What do you want to tell people?"></textarea>' +
+        '<div class="row"><div><label for="annAud">Who should see it?</label><select id="annAud">' + audOpts + '</select></div><button type="submit">Post</button></div></form>' : '') +
+      '<div class="feed">' + (r.announcements.length ? r.announcements.map(function (a) { return postCard(a, true); }).join('') : emptyBox(canPost ? 'Write the first announcement using the box above.' : 'When the university or your lecturers post news, it will appear here.', 'No announcements yet')) + '</div></div>' +
+      '<div class="dash-aside">' + todayPanel('') + panel('megaphone', 'At a glance', '<ul class="minilist"><li>Total announcements<span class="r">' + r.announcements.length + '</span></li><li>Pinned<span class="r">' + r.announcements.filter(function (a) { return a.pinned; }).length + '</span></li><li>New for you<span class="r">' + (r.unread || 0) + '</span></li></ul>') +
+      panel('bell', 'Good to know', '<p>Pinned announcements stay at the top. Important notices from the administration are shown first.</p>') + '</div></div>';
+    if (canPost) {
+      $('annForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        try { await api('POST', '/api/announcements', { title: $('annTitle').value, body: $('annBody').value, audience: $('annAud').value }); toast('Announcement posted.', 'ok'); route(); } catch (err) { toast(err.message, 'error'); }
+      });
+    }
+    on('[data-annrm]', 'click', function (b) {
+      if (confirm('Delete this announcement? Nobody will see it any more.')) api('DELETE', '/api/announcements/' + encodeURIComponent(b.getAttribute('data-annrm'))).then(function () { toast('Deleted.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+    });
+    on('[data-annpin]', 'click', function (b) {
+      api('POST', '/api/announcements/' + encodeURIComponent(b.getAttribute('data-annpin')) + '/pin').then(function () { route(); }).catch(function (err) { toast(err.message, 'error'); });
+    });
+    if (r.unread) { await api('POST', '/api/announcements/seen'); setAnnBadge(0); }
+  };
+});
+
+/* ---------- admin: fees (balance = total required - amount paid) ---------- */
+VIEWS.admin.fees = async function (t) {
+  var f = ui.fees, meta = state.meta;
+  if (!meta.semesters.some(function (s) { return s.id === f.semesterId; })) f.semesterId = (meta.semesters.filter(function (s) { return s.active; })[0] || meta.semesters[0] || {}).id || '';
+  if (!f.semesterId) { $('view').innerHTML = '<h2>Fees</h2><div class="note">Create a semester first (Semesters page).</div>'; return; }
+  var data = await api('GET', '/api/fees?' + qs({ semesterId: f.semesterId, departmentId: f.departmentId, programId: f.programId })); if (!live(t)) return;
+  var rows = data.rows;
+  $('view').innerHTML = '<h2>Fees</h2>' + filterBar(f, true, '<div class="push"><button id="saveAll" type="button" disabled>Save all changes</button></div>') +
+    '<div class="card" id="feeSummary" style="margin-bottom:14px"></div>' +
+    '<p class="hint">Type the total each student must pay and the amount paid so far. The balance is worked out automatically (total minus paid). Press Save on the row; the student sees the new balance straight away.</p>' +
+    groupedTable(['Student', 'Program', 'Total required (' + esc(meta.settings.currency) + ')', 'Amount paid (' + esc(meta.settings.currency) + ')', 'Balance', ''], groupByDept(rows, function (r) { return r.student.departmentId; }), function (r) {
+      var fee = r.fee, u = r.student;
+      return '<tr data-search="' + searchKey(u) + '" data-sid="' + esc(u.id) + '" data-t0="' + (fee ? fee.total : '') + '" data-p0="' + (fee ? fee.paid : '') + '"><td>' + whoCell(u) + '</td><td>' + esc(nameOf(meta.programs, u.programId)) + '</td>' +
+        '<td><input class="num" type="number" min="0" step="0.01" data-k="total" value="' + (fee ? fee.total : '') + '" placeholder="0.00" aria-label="Total required for ' + esc(u.name) + '"></td>' +
+        '<td><input class="num" type="number" min="0" step="0.01" data-k="paid" value="' + (fee ? fee.paid : '') + '" placeholder="0.00" aria-label="Amount paid by ' + esc(u.name) + '"></td>' +
+        '<td class="bal">-</td><td><button class="small" data-save disabled>Save</button></td></tr>';
+    });
+  bindFilterBar(f);
+
+  function num(v) { return v === '' ? 0 : Number(v); }
+  function rowState(tr) {
+    var tv = tr.querySelector('[data-k=total]').value, pv = tr.querySelector('[data-k=paid]').value;
+    var empty = tv === '' && pv === '';
+    var bad = (tv !== '' && !(num(tv) >= 0)) || (pv !== '' && !(num(pv) >= 0));
+    var dirty = tv !== tr.getAttribute('data-t0') || pv !== tr.getAttribute('data-p0');
+    return { total: num(tv), paid: num(pv), empty: empty, bad: bad, dirty: dirty };
+  }
+  function recalc() {
+    var T = 0, P = 0, owing = 0, dirtyCount = 0;
+    $('view').querySelectorAll('tr[data-sid]').forEach(function (tr) {
+      var s = rowState(tr), cell = tr.querySelector('.bal');
+      if (s.empty) { cell.textContent = 'Not set'; cell.className = 'bal'; }
+      else if (s.bad) { cell.textContent = 'Check amounts'; cell.className = 'bal owing'; }
+      else { cell.textContent = balText(s.total, s.paid); cell.className = 'bal ' + balClass(s.total, s.paid); T += s.total; P += s.paid; if (s.total - s.paid > 0) owing++; }
+      var btn = tr.querySelector('[data-save]'); btn.disabled = !(s.dirty && !s.empty && !s.bad);
+      if (s.dirty && !s.empty && !s.bad) dirtyCount++;
+    });
+    $('feeSummary').innerHTML = '<b>' + rows.length + ' student(s)</b> &middot; Total required ' + money(T) + ' &middot; Paid ' + money(P) + ' &middot; <b>Balance ' + money(Math.round((T - P) * 100) / 100) + '</b> &middot; ' + owing + ' owing';
+    $('saveAll').disabled = dirtyCount === 0;
+  }
+  async function saveRow(tr) {
+    var s = rowState(tr);
+    var r = await api('PUT', '/api/fees/' + encodeURIComponent(tr.getAttribute('data-sid')) + '/' + encodeURIComponent(f.semesterId), { total: s.total, paid: s.paid });
+    tr.setAttribute('data-t0', r.fee.total); tr.setAttribute('data-p0', r.fee.paid);
+    tr.querySelector('[data-k=total]').value = r.fee.total; tr.querySelector('[data-k=paid]').value = r.fee.paid;
+    recalc();
+  }
+  $('view').querySelectorAll('tr[data-sid] input').forEach(function (i) { i.addEventListener('input', recalc); });
+  on('[data-save]', 'click', function (b) { saveRow(b.closest('tr')).then(function () { toast('Saved. The student has been notified.', 'ok'); }).catch(function (err) { toast(err.message, 'error'); }); });
+  $('saveAll').addEventListener('click', async function () {
+    var n = 0;
+    for (var tr of Array.from($('view').querySelectorAll('tr[data-sid]'))) {
+      var s = rowState(tr);
+      if (s.dirty && !s.empty && !s.bad) { try { await saveRow(tr); n++; } catch (err) { toast(err.message, 'error'); return; } }
+    }
+    toast(n + ' fee record(s) saved.', 'ok');
+  });
+  recalc();
+};
+
+/* ---------- admin: transcripts ---------- */
+async function uploadTranscript(studentId, semesterId, file) {
+  if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') throw new Error('"' + file.name + '" is not a PDF file.');
+  if (file.size > 5 * 1024 * 1024) throw new Error('"' + file.name + '" is larger than 5 MB.');
+  return api('PUT', '/api/transcripts/' + encodeURIComponent(studentId) + '/' + encodeURIComponent(semesterId) + '?filename=' + encodeURIComponent(file.name), file, { type: 'application/pdf' });
+}
+VIEWS.admin.transcripts = async function (t) {
+  var f = ui.transcripts, meta = state.meta;
+  if (!meta.semesters.some(function (s) { return s.id === f.semesterId; })) f.semesterId = (meta.semesters.filter(function (s) { return s.active; })[0] || meta.semesters[0] || {}).id || '';
+  if (!f.semesterId) { $('view').innerHTML = '<h2>Transcripts</h2><div class="note">Create a semester first (Semesters page).</div>'; return; }
+  var data = await api('GET', '/api/transcripts?' + qs({ semesterId: f.semesterId, departmentId: f.departmentId, programId: f.programId })); if (!live(t)) return;
+  var rows = data.rows, done = rows.filter(function (r) { return r.transcript; }).length;
+  $('view').innerHTML = '<h2>Transcripts</h2>' + filterBar(f, true) +
+    '<div class="card" style="margin-bottom:14px"><b>Send many at once</b><p class="hint" style="margin-top:4px">Name each PDF with the student\'s registration number (for example <b>STU2026001.pdf</b>), then choose them all here. Each one is matched to its student automatically. Slashes in a registration number become a dash in the file name.</p>' +
+    '<label class="btn secondary">Choose PDF files<input id="bulkFiles" type="file" accept="application/pdf,.pdf" multiple></label><div id="bulkOut" class="hint"></div></div>' +
+    '<p class="hint">' + done + ' of ' + rows.length + ' student(s) shown have a transcript for this semester. Students are notified when a transcript is uploaded.</p>' +
+    groupedTable(['Student', 'Program', 'Transcript', ''], groupByDept(rows, function (r) { return r.student.departmentId; }), function (r) {
+      var u = r.student, tr = r.transcript;
+      return '<tr data-search="' + searchKey(u) + '"><td>' + whoCell(u) + '</td><td>' + esc(nameOf(meta.programs, u.programId)) + '</td>' +
+        '<td>' + (tr ? '<span class="pill ok">Sent</span> ' + esc(tr.originalName) + '<br><small class="hint">' + fmtDate(tr.uploadedAt) + ' &middot; ' + fmtSize(tr.size) + '</small>' : '<span class="pill warn">Not sent</span>') + '</td>' +
+        '<td class="actions"><label class="btn small' + (tr ? ' secondary' : '') + '">' + (tr ? 'Replace' : 'Upload PDF') + '<input type="file" accept="application/pdf,.pdf" data-up="' + esc(u.id) + '"></label>' +
+        (tr ? '<a class="btn small secondary" href="' + BASE + '/api/transcripts/' + esc(tr.id) + '/download">Download</a><button class="small danger" data-rm="' + esc(tr.id) + '">Remove</button>' : '') + '</td></tr>';
+    });
+  bindFilterBar(f);
+  on('[data-up]', 'change', function (inp) {
+    var file = inp.files[0]; if (!file) return;
+    uploadTranscript(inp.getAttribute('data-up'), f.semesterId, file).then(function () { toast('Transcript sent to the student.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); inp.value = ''; });
+  });
+  on('[data-rm]', 'click', function (b) {
+    if (confirm('Remove this transcript? The student will no longer be able to download it.')) api('DELETE', '/api/transcripts/' + encodeURIComponent(b.getAttribute('data-rm'))).then(function () { toast('Removed.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+  });
+  $('bulkFiles').addEventListener('change', async function () {
+    var files = Array.from(this.files), out = $('bulkOut'); if (!files.length) return;
+    out.textContent = 'Checking files...';
+    try {
+      var all = (await api('GET', '/api/users?role=student')).users, byKey = {};
+      all.forEach(function (u) { byKey[u.loginId.replace(/[\/\\]/g, '-').toLowerCase()] = u; });
+      var ok = 0, lines = [];
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i], key = file.name.replace(/\.pdf$/i, '').trim().toLowerCase(), stu = byKey[key];
+        out.textContent = 'Uploading ' + (i + 1) + ' of ' + files.length + '...';
+        if (!stu) { lines.push('Not matched: ' + file.name + ' (no student with that registration number)'); continue; }
+        try { await uploadTranscript(stu.id, f.semesterId, file); ok++; } catch (err) { lines.push('Failed: ' + file.name + ' - ' + err.message); }
+      }
+      out.innerHTML = '<b>' + ok + ' of ' + files.length + ' sent.</b>' + (lines.length ? '<ul class="list">' + lines.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') + '</ul>' : '') +
+        (ok ? ' <button type="button" id="bulkRefresh" class="small">Refresh the list below</button>' : '');
+      toast(ok + ' transcript(s) sent.', ok ? 'ok' : 'error');
+      var rf = $('bulkRefresh'); if (rf) rf.addEventListener('click', function () { route(); });
+    } catch (err) { out.textContent = ''; toast(err.message, 'error'); }
+  });
+};
+
+/* ---------- student: dashboard, fees, transcripts ---------- */
+VIEWS.student.dashboard = async function (t) {
+  var res = await Promise.all([api('GET', '/api/my/fees'), api('GET', '/api/my/transcripts'), api('GET', '/api/notifications/count'), latestPosts(), api('GET', '/api/my/courses', undefined, { quiet: true }), api('GET', '/api/my/results', undefined, { quiet: true })]); if (!live(t)) return;
+  var u = state.user, fees = res[0], tr = res[1].rows, mc = res[4], p = state.meta.programs.filter(function (x) { return x.id === u.programId; })[0];
+  var sem = state.meta.semesters.filter(function (x) { return x.active; })[0];
+  var mine = mc.rows.filter(function (x) { return x.semester.id === mc.semesterId; });
+  var pct = fees.totals && fees.totals.total ? Math.round(fees.totals.paid / fees.totals.total * 100) : 0;
+  var aside = '<div class="dash-aside">' + todayPanel(sem ? sem.name + (mc.regOpen ? ' - course registration is open' : ' - course registration is closed') : '') +
+    panel('book', 'My courses', mine.length ? '<ul class="minilist">' + mine.map(function (x) { return '<li><div><b>' + esc(x.code) + '</b><small>' + esc(x.title) + '</small></div><span class="r">' + esc(x.credits) + ' cr</span></li>'; }).join('') + '</ul>' +
+      '<p class="hint" style="margin-bottom:0">' + mc.credits + ' of ' + mc.maxCredits + ' credits picked</p>' : emptyBox(mc.canPick ? 'You have not picked any course yet.' : 'Course registration is not open right now.', 'No courses yet', mc.canPick ? 'mycourses' : '', 'Pick courses', true), ['mycourses', 'Open']) +
+    (fees.rows.length ? ringPanel('wallet', 'Fees paid', pct, [['Required', money(fees.totals.total)], ['Paid', money(fees.totals.paid)], ['Balance', money(fees.totals.balance)]], ['myfees', 'Open']) : panel('wallet', 'Fees', '<p>Your fees have not been set up yet.</p>')) +
+    panel('user', 'My details', '<dl class="info"><dt>Reg. no.</dt><dd>' + esc(u.loginId) + '</dd><dt>Roll no.</dt><dd>' + esc(u.rollNo || '-') + '</dd><dt>Program</dt><dd>' + esc(p ? p.name : '-') + '</dd><dt>Year</dt><dd>' + esc(u.year || '-') + '</dd><dt>Phone</dt><dd>' + esc(u.phone || '-') + '</dd></dl>', ['profile', 'Edit']) + '</div>';
+  $('view').innerHTML = hero(greeting() + ', ' + u.name.split(' ')[0], 'Welcome to the Starford student portal.', [u.loginId, p ? p.name : '', u.year ? 'Year ' + u.year : '', sem ? sem.name : '']) +
+    '<div class="dash"><div><div class="cards">' + (fees.rows.length ? statCard(money(fees.totals.balance), 'Fee balance', fees.totals.balance > 0 ? 'owing' : (fees.totals.balance < 0 ? 'credit' : 'cleared'), true) : statCard('Not set yet', 'Fee balance', '', true)) +
+    statCard(mine.length, 'Courses this semester') + statCard(res[5].semesters.length ? res[5].cgpa.toFixed(2) : '-', 'Cumulative GPA') + statCard(tr.length, 'Transcripts available') + statCard(res[2].unread, 'Unread notifications') + '</div>' +
+    quickLinks([['mycourses', 'My courses'], ['myresults', 'My results'], ['myfees', 'My fees'], ['mytranscripts', 'My transcripts'], ['announcements', 'Announcements'], ['profile', 'My profile']]) + res[3] + '</div>' + aside + '</div>';
+};
+VIEWS.student.myfees = async function (t) {
+  var r = await api('GET', '/api/my/fees'); if (!live(t)) return;
+  $('view').innerHTML = '<h2>My Fees</h2>' + (r.rows.length ?
+    '<div class="cards">' + statCard(money(r.totals.total), 'Total required', '', true) + statCard(money(r.totals.paid), 'Total paid', '', true) +
+    statCard(r.totals.balance < 0 ? money(-r.totals.balance) + ' credit' : money(r.totals.balance), 'Balance to pay', r.totals.balance > 0 ? 'owing' : (r.totals.balance < 0 ? 'credit' : 'cleared'), true) + '</div>' +
+    '<div class="table-wrap"><table><thead><tr><th>Semester</th><th>Total required</th><th>Paid</th><th>Balance</th><th>Status</th></tr></thead><tbody>' +
+    r.rows.map(function (x) { return '<tr><td>' + esc(x.semester.name) + '</td><td>' + money(x.total) + '</td><td>' + money(x.paid) + '</td><td class="bal ' + balClass(x.total, x.paid) + '">' + balText(x.total, x.paid) + '</td><td>' + (x.balance > 0 ? '<span class="pill bad">Owing</span>' : (x.balance < 0 ? '<span class="pill info">Credit</span>' : '<span class="pill ok">Cleared</span>')) + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+    '<p class="hint">Balance = total required minus amount paid. Pay at the Finance Office and quote your registration number (' + esc(state.user.loginId) + '). Your balance updates once the registry records the payment.</p>'
+    : emptyBox('Your fees have not been set up yet. Please check again later or ask the registry office.'));
+};
+VIEWS.student.mytranscripts = async function (t) {
+  var r = await api('GET', '/api/my/transcripts'); if (!live(t)) return;
+  $('view').innerHTML = '<h2>My Transcripts</h2>' + (r.rows.length ?
+    '<div class="table-wrap"><table><thead><tr><th>Semester</th><th>File</th><th>Sent on</th><th></th></tr></thead><tbody>' +
+    r.rows.map(function (x) { return '<tr><td>' + esc(x.semester.name) + '</td><td>' + esc(x.originalName) + '<br><small class="hint">' + fmtSize(x.size) + '</small></td><td>' + fmtDate(x.uploadedAt) + '</td><td><a class="btn small" href="' + BASE + '/api/transcripts/' + esc(x.id) + '/download">Download</a></td></tr>'; }).join('') + '</tbody></table></div>'
+    : emptyBox('No transcripts yet. You will get a notification when the registry sends one.'));
+};
+
+/* ---------- accounts department ---------- */
+VIEWS.accounts.fees = VIEWS.admin.fees;
+async function feeSummary(semId) {
+  var rows = (await api('GET', '/api/fees?semesterId=' + encodeURIComponent(semId))).rows, tot = 0, paid = 0, owing = 0, none = 0;
+  rows.forEach(function (x) { if (!x.fee) { none++; return; } tot += x.fee.total; paid += x.fee.paid; if (x.fee.balance > 0) owing++; });
+  return { rows: rows, total: tot, paid: paid, balance: Math.round((tot - paid) * 100) / 100, owing: owing, none: none, pct: tot ? Math.round(paid / tot * 100) : 0 };
+}
+VIEWS.accounts.dashboard = async function (t) {
+  var semId = currentSemId(), res = await Promise.all([semId ? feeSummary(semId) : null, latestPosts()]); if (!live(t)) return;
+  var f = res[0];
+  var top = f ? f.rows.filter(function (x) { return x.fee && x.fee.balance > 0; }).sort(function (a, b) { return b.fee.balance - a.fee.balance; }).slice(0, 6) : [];
+  var aside = '<div class="dash-aside">' + todayPanel(nameOf(state.meta.semesters, semId)) +
+    (f ? ringPanel('wallet', 'Fees collected', f.pct, [['Required', money(f.total)], ['Paid', money(f.paid)], ['Outstanding', money(f.balance)]], ['feereport', 'Report']) : '') +
+    (f ? panel('users', 'Biggest balances', top.length ? '<ul class="minilist">' + top.map(function (x) { return '<li><div>' + esc(x.student.name) + '<small>' + esc(x.student.rollNo || x.student.loginId) + '</small></div><span class="r bad">' + money(x.fee.balance) + '</span></li>'; }).join('') + '</ul>' : emptyBox('Nobody owes money for this semester.', 'All clear', '', '', true), ['feereport', 'All']) : '') + '</div>';
+  $('view').innerHTML = hero(greeting() + ', ' + state.user.name, 'Accounts department. Update student fees and follow payments.', [nameOf(state.meta.semesters, semId)]) +
+    quickLinks([['fees', 'Update student fees'], ['feereport', 'Fee report'], ['announcements', 'Announcements']]) +
+    '<div class="dash"><div>' +
+    (f ? section('Fees this semester', nameOf(state.meta.semesters, semId), '<div class="cards">' + statCard(money(f.total), 'Total fees required', '', true) + statCard(money(f.paid), 'Total paid', '', true) + statCard(money(f.balance), 'Outstanding balance', f.balance > 0 ? 'owing' : 'cleared', true) + statCard(f.pct + '%', 'Collected') + statCard(f.owing, 'Students still owing') + statCard(f.none, 'Students with no fee entered', f.none ? 'owing' : 'cleared') + '</div>') : '<div class="note">No semester has been created yet.</div>') + res[1] + '</div>' + aside + '</div>';
+};
+VIEWS.accounts.feereport = async function (t) {
+  var f = ui.reports; if (!f.semesterId) f.semesterId = currentSemId();
+  if (!f.semesterId) { $('view').innerHTML = '<h2>Fee Report</h2><div class="note">No semester has been created yet.</div>'; return; }
+  var d = await feeSummary(f.semesterId); if (!live(t)) return;
+  var owing = d.rows.filter(function (x) { return x.fee && x.fee.balance > 0; }).sort(function (a, b) { return b.fee.balance - a.fee.balance; });
+  $('view').innerHTML = '<h2>Fee Report</h2><div class="toolbar"><div><label for="frSem">Semester</label><select id="frSem">' + semOptions(f.semesterId) + '</select></div><div class="push"><button type="button" class="secondary" id="frCsv">Download all (CSV)</button></div></div>' +
+    '<div class="cards">' + statCard(money(d.total), 'Total required', '', true) + statCard(money(d.paid), 'Total paid', '', true) + statCard(money(d.balance), 'Outstanding', d.balance > 0 ? 'owing' : 'cleared', true) + statCard(d.pct + '%', 'Collected') + '</div>' +
+    section('Students who still owe', owing.length + ' student(s)', owing.length ? '<div class="table-wrap"><table><thead><tr><th>Student</th><th>Roll No.</th><th>Required</th><th>Paid</th><th>Balance</th></tr></thead><tbody>' +
+      owing.map(function (x) { return '<tr><td>' + whoCell(x.student) + '</td><td>' + esc(x.student.rollNo || '-') + '</td><td>' + money(x.fee.total) + '</td><td>' + money(x.fee.paid) + '</td><td class="bal owing">' + money(x.fee.balance) + '</td></tr>'; }).join('') + '</tbody></table></div>' : emptyBox('Nobody owes anything for this semester.'));
+  $('frSem').addEventListener('change', function () { f.semesterId = this.value; route(); });
+  $('frCsv').addEventListener('click', function () {
+    downloadCsv('fees-' + nameOf(state.meta.semesters, f.semesterId).replace(/[^A-Za-z0-9]+/g, '-') + '.csv', ['Name', 'Registration no.', 'Roll no.', 'Total required', 'Paid', 'Balance'],
+      d.rows.map(function (x) { return [x.student.name, x.student.loginId, x.student.rollNo, x.fee ? x.fee.total : '', x.fee ? x.fee.paid : '', x.fee ? x.fee.balance : '']; }));
+  });
+};
+
+/* ---------- admin: audit log ---------- */
+VIEWS.admin.audit = async function (t) {
+  var q = ui.audit.q;
+  var r = await api('GET', '/api/audit?' + qs({ q: q })); if (!live(t)) return;
+  $('view').innerHTML = '<h2>Audit Log</h2><div class="toolbar"><div class="grow"><label for="auQ">Search (name, action or detail)</label><input id="auQ" type="search" value="' + esc(q) + '" placeholder="e.g. fees, password, Roll"></div><div class="push"><button type="button" id="auGo">Search</button></div></div>' +
+    '<p class="hint">The last 300 matching actions, newest first.</p>' +
+    (r.rows.length ? '<div class="table-wrap"><table><thead><tr><th>When</th><th>Who</th><th>Type</th><th>What happened</th></tr></thead><tbody>' +
+      r.rows.map(function (a) { var d = new Date(a.at); return '<tr><td style="white-space:nowrap">' + fmtDate(a.at) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + '</td><td>' + esc(a.byName) + '</td><td>' + esc(a.action) + '</td><td>' + esc(a.detail) + '</td></tr>'; }).join('') + '</tbody></table></div>' : emptyBox('Nothing found.'));
+  var go = function () { ui.audit.q = $('auQ').value.trim(); route(); };
+  $('auGo').addEventListener('click', go); $('auQ').addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
+};
+
+/* ---------- admin: import a list of students (CSV) ---------- */
+function parseCsv(text) {
+  var rows = [], row = [], cur = '', q = false, i, c;
+  text = text.replace(/^\uFEFF/, '');
+  for (i = 0; i < text.length; i++) {
+    c = text[i];
+    if (q) { if (c === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += c; }
+    else if (c === '"') q = true;
+    else if (c === ',' || c === ';' || c === '\t') { row.push(cur); cur = ''; }
+    else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(cur); rows.push(row); row = []; cur = ''; }
+    else cur += c;
+  }
+  if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
+  return rows.filter(function (r) { return r.some(function (x) { return x.trim() !== ''; }); });
+}
+function openImport() {
+  openModal('Import students from a list',
+    '<p class="hint" style="margin-top:0">Use an Excel file saved as <b>CSV</b>, with these columns in this order:<br><b>Name, Registration number, Roll number, Program, Year, Phone</b>. The first row may be a heading row. Program must match a program name exactly.</p>' +
+    '<p><button type="button" class="small secondary" id="impTpl">Download an example file</button></p>' +
+    '<label>Choose the CSV file</label><input type="file" id="impFile" accept=".csv,text/csv,text/plain"><p class="hint" id="impInfo">No file chosen.</p>',
+    async function () {
+      var file = $('impFile').files[0]; if (!file) throw new Error('Choose a CSV file first.');
+      var rows = parseCsv(await file.text());
+      if (rows.length && /name/i.test(rows[0][0] || '') && !/\d/.test(rows[0][3] || '1')) rows.shift();
+      if (!rows.length) throw new Error('The file has no students in it.');
+      if (rows.length > 400) throw new Error('Please import at most 400 students at a time. Split the file.');
+      var payload = rows.map(function (r) { return { name: (r[0] || '').trim(), loginId: (r[1] || '').trim(), rollNo: (r[2] || '').trim(), program: (r[3] || '').trim(), year: (r[4] || '').trim() || '1', phone: (r[5] || '').trim() }; });
+      var res = await api('POST', '/api/users/import', { rows: payload });
+      return function () { showImportResult(res); };
+    }, 'Import');
+  $('impTpl').addEventListener('click', function () {
+    var p = state.meta.programs[0] ? state.meta.programs[0].name : 'Bachelor of Information Technology';
+    downloadCsv('students-example.csv', ['Name', 'Registration number', 'Roll number', 'Program', 'Year', 'Phone'], [['Akon Deng', 'STU2026101', '0101', p, '1', '+211 912 345 678'], ['Nyibol Mayen', 'STU2026102', '0102', p, '1', '']]);
+  });
+  $('impFile').addEventListener('change', async function () {
+    var f = this.files[0]; if (!f) return;
+    var n = parseCsv(await f.text()).length; $('impInfo').textContent = f.name + ': ' + n + ' line(s) found.';
+  });
+}
+function showImportResult(res) {
+  var ok = res.results.filter(function (x) { return x.ok; }), bad = res.results.filter(function (x) { return !x.ok; });
+  openModal('Import finished',
+    '<p><b>' + res.added + '</b> student(s) added, <b>' + res.failed + '</b> not added.</p>' +
+    (ok.length ? '<p><button type="button" class="small" id="impSheet">Download the sign-in sheet (CSV)</button></p><p class="hint">The sheet lists each student\'s temporary password. It is shown only now. Print it, hand each student their own line, then delete the file.</p>' : '') +
+    (bad.length ? '<h4 class="mini">Rows that were not added</h4><div class="table-wrap"><table><thead><tr><th>Row</th><th>Name</th><th>Problem</th></tr></thead><tbody>' + bad.map(function (x) { return '<tr><td>' + x.row + '</td><td>' + esc(x.name || x.loginId || '-') + '</td><td>' + esc(x.error) + '</td></tr>'; }).join('') + '</tbody></table></div><p class="hint">Fix these rows in your file and import only those again.</p>' : ''),
+    function () { route(); }, 'Done', true);
+  var b = $('impSheet');
+  if (b) b.addEventListener('click', function () { downloadCsv('student-signin-sheet.csv', ['Name', 'Registration number', 'Roll number', 'Temporary password'], ok.map(function (x) { return [x.name, x.loginId, x.rollNo, x.tempPassword]; })); });
+}
+
+/* ---------- student: my courses ---------- */
+VIEWS.student.mycourses = async function (t) {
+  var sel = ui.mycourses.semesterId;
+  var r = await api('GET', '/api/my/courses' + (sel ? '?semesterId=' + encodeURIComponent(sel) : '')); if (!live(t)) return;
+  var semId = r.semesterId, mine = r.rows.filter(function (x) { return x.semester.id === semId; });
+  $('view').innerHTML = '<h2>My Courses</h2><div class="toolbar"><div><label for="mcSem">Semester</label><select id="mcSem">' + semOptions(semId) + '</select></div></div>' +
+    (r.canPick ? '<p class="hint" style="margin-top:0">Credits picked: <b>' + r.credits + '</b> of ' + r.maxCredits + ' allowed.</p>' : '') + (!r.regOpen && semId === r.currentSemesterId ? '<div class="note">Course registration is closed for this semester.</div>' : '') +
+    section('Courses I picked', nameOf(state.meta.semesters, semId), mine.length ? '<div class="table-wrap"><table><thead><tr><th>Code</th><th>Course</th><th>Credits</th><th>Lecturer</th><th></th></tr></thead><tbody>' +
+      mine.map(function (x) { return '<tr><td><b>' + esc(x.code) + '</b></td><td>' + esc(x.title) + '</td><td>' + esc(x.credits) + '</td><td>' + esc(x.lecturerName || 'Not assigned yet') + '</td><td class="actions">' + (r.canPick ? '<button class="small secondary" data-drop="' + esc(x.courseId) + '">Drop</button>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>'
+      : emptyBox('You have not picked any course for this semester.')) +
+    (r.canPick ? section('Courses I can pick', 'Open to your program and year', r.available.length ? '<div class="table-wrap"><table><thead><tr><th>Code</th><th>Course</th><th>Credits</th><th>Lecturer</th><th></th></tr></thead><tbody>' +
+      r.available.map(function (x) { return '<tr><td><b>' + esc(x.code) + '</b></td><td>' + esc(x.title) + '</td><td>' + esc(x.credits) + '</td><td>' + esc(x.lecturerName || 'Not assigned yet') + '</td><td class="actions"><button class="small" data-pick="' + esc(x.id) + '">Pick</button></td></tr>'; }).join('') + '</tbody></table></div>'
+      : emptyBox('No more courses are open to you right now.')) : '<p class="hint">You can pick or drop courses only in the current semester.</p>');
+  $('mcSem').addEventListener('change', function () { ui.mycourses.semesterId = this.value; route(); });
+  on('[data-pick]', 'click', function (b) { api('POST', '/api/my/courses', { courseId: b.getAttribute('data-pick') }).then(function () { toast('Course picked.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); }); });
+  on('[data-drop]', 'click', function (b) { if (confirm('Drop this course?')) api('DELETE', '/api/my/courses/' + encodeURIComponent(b.getAttribute('data-drop'))).then(function () { toast('Course dropped.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); }); });
+};
+
+/* ---------- lecturer: the courses I teach (picked from my own department) ---------- */
+VIEWS.lecturer.mycourses = async function (t) {
+  var r = await api('GET', '/api/teaching'); if (!live(t)) return;
+  if (!r.department) { $('view').innerHTML = '<h2>My Courses</h2><div class="note">You have no department yet. Ask the administrator to assign one, then you can pick your courses here.</div>'; return; }
+  var mine = r.courses.filter(function (c) { return c.mine; });
+  $('view').innerHTML = '<h2>My Courses</h2><p class="hint" style="margin-top:0">Department: <b>' + esc(r.department.name) + '</b>. Pick the courses you will teach. Students who pick them will appear under My Students.</p>' +
+    section('Courses I teach', mine.length + ' course(s)', mine.length ? '<div class="table-wrap"><table><thead><tr><th>Code</th><th>Course</th><th>Program / year</th><th>Students this semester</th><th></th></tr></thead><tbody>' +
+      mine.map(function (c) { return '<tr><td><b>' + esc(c.code) + '</b></td><td>' + esc(c.title) + '</td><td>' + esc(c.programName || 'Any program') + (c.year ? ', year ' + c.year : '') + '</td><td>' + c.enrolled + '</td><td class="actions"><button class="small secondary" data-stop="' + esc(c.id) + '">Stop teaching</button></td></tr>'; }).join('') + '</tbody></table></div>'
+      : emptyBox('You have not picked any course yet. Choose from the list below.')) +
+    section('Courses in my department', '', r.courses.length ? '<div class="table-wrap"><table><thead><tr><th>Code</th><th>Course</th><th>Program / year</th><th>Status</th><th></th></tr></thead><tbody>' +
+      r.courses.map(function (c) {
+        var status = c.mine ? '<span class="pill ok">I teach this</span>' : (c.takenByOther ? '<span class="pill off">Taught by ' + esc(c.lecturerName) + '</span>' : '<span class="pill info">Available</span>');
+        return '<tr><td><b>' + esc(c.code) + '</b></td><td>' + esc(c.title) + '</td><td>' + esc(c.programName || 'Any program') + (c.year ? ', year ' + c.year : '') + '</td><td>' + status + '</td><td class="actions">' + (!c.mine && !c.takenByOther ? '<button class="small" data-teach="' + esc(c.id) + '">Teach this course</button>' : '') + '</td></tr>';
+      }).join('') + '</tbody></table></div>' : emptyBox('The administrator has not added any course to your department yet.'));
+  on('[data-teach]', 'click', function (b) { api('POST', '/api/teaching/' + encodeURIComponent(b.getAttribute('data-teach'))).then(function () { toast('Course added to your list.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); }); });
+  on('[data-stop]', 'click', function (b) { if (confirm('Stop teaching this course? Its students will no longer appear under My Students.')) api('DELETE', '/api/teaching/' + encodeURIComponent(b.getAttribute('data-stop'))).then(function () { toast('Removed from your list.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); }); });
+};
+
+
+/* ---------- marks and results ---------- */
+function gradeFor(t) { return t >= 80 ? 'A' : t >= 70 ? 'B' : t >= 60 ? 'C' : t >= 50 ? 'D' : 'F'; }
+function gradePill(g) { return g ? '<span class="pill ' + (g === 'F' ? 'bad' : (g === 'A' ? 'ok' : 'info')) + '">' + esc(g) + '</span>' : '-'; }
+['lecturer', 'admin'].forEach(function (role) {
+  VIEWS[role].marks = async function (t) {
+    var f = ui.marks; if (!f.semesterId) f.semesterId = currentSemId();
+    if (!f.courseId) {
+      var r = await api('GET', '/api/results/courses?' + qs({ semesterId: f.semesterId })); if (!live(t)) return;
+      $('view').innerHTML = '<h2>Marks and Results</h2><div class="toolbar"><div><label for="mkSem">Semester</label><select id="mkSem">' + semOptions(f.semesterId) + '</select></div></div>' +
+        (r.courses.length ? '<div class="table-wrap"><table><thead><tr><th>Code</th><th>Course</th>' + (role === 'admin' ? '<th>Lecturer</th>' : '') + '<th>Students</th><th>Marks entered</th><th>Status</th><th></th></tr></thead><tbody>' +
+          r.courses.map(function (c) {
+            var st = c.enrolled && c.published === c.enrolled ? '<span class="pill ok">Published</span>' : (c.published ? '<span class="pill warn">Partly published</span>' : '<span class="pill off">Not published</span>');
+            return '<tr><td><b>' + esc(c.code) + '</b></td><td>' + esc(c.title) + '</td>' + (role === 'admin' ? '<td>' + esc(c.lecturerName || '-') + '</td>' : '') + '<td>' + c.enrolled + '</td><td>' + c.entered + ' / ' + c.enrolled + '</td><td>' + st + '</td><td class="actions"><button class="small" data-open="' + esc(c.id) + '">Open marks sheet</button></td></tr>';
+          }).join('') + '</tbody></table></div>'
+          : emptyBox(role === 'admin' ? 'Add courses first, then lecturers can enter marks.' : 'Pick the courses you teach first. Their students will appear here for marking.', 'No courses to mark yet', role === 'admin' ? 'courses' : 'mycourses', role === 'admin' ? 'Open courses' : 'Pick my courses'));
+      $('mkSem').addEventListener('change', function () { f.semesterId = this.value; route(); });
+      on('[data-open]', 'click', function (b) { f.courseId = b.getAttribute('data-open'); route(); });
+      return;
+    }
+    var r2;
+    try { r2 = await api('GET', '/api/results/sheet?' + qs({ courseId: f.courseId, semesterId: f.semesterId })); } catch (err) { f.courseId = ''; throw err; }
+    if (!live(t)) return;
+    var rows = r2.rows, published = rows.length > 0 && rows.every(function (x) { return x.published; }), co = r2.course;
+    $('view').innerHTML = '<h2>Marks and Results</h2><div class="toolbar"><div><button type="button" class="secondary" id="mkBack">&larr; All courses</button></div><div class="push"><button type="button" class="secondary" id="mkCsv"' + (rows.length ? '' : ' disabled') + '>Download (CSV)</button></div></div>' +
+      section(co.code + ' ' + co.title, nameOf(state.meta.semesters, f.semesterId) + ' &middot; coursework out of ' + r2.maxCoursework + ', exam out of ' + r2.maxExam,
+        (published ? '<div class="note">These results are published and students can see them. Unpublish to change a mark.</div>' : '<div class="note">Marks are private until you publish them. Enter coursework and exam for every student, save, then publish.</div>') +
+        (rows.length ? '<div class="table-wrap"><table id="mkTable"><thead><tr><th>Student</th><th>Roll No.</th><th>Coursework /' + r2.maxCoursework + '</th><th>Exam /' + r2.maxExam + '</th><th>Total</th><th>Grade</th></tr></thead><tbody>' +
+          rows.map(function (x) {
+            return '<tr data-sid="' + esc(x.studentId) + '"><td>' + esc(x.name) + '<br><small class="hint">' + esc(x.loginId) + '</small></td><td>' + esc(x.rollNo || '-') + '</td>' +
+              '<td><input class="num" data-cw type="number" min="0" max="' + r2.maxCoursework + '" step="0.5" value="' + (x.coursework === null ? '' : esc(x.coursework)) + '"' + (published ? ' disabled' : '') + '></td>' +
+              '<td><input class="num" data-ex type="number" min="0" max="' + r2.maxExam + '" step="0.5" value="' + (x.exam === null ? '' : esc(x.exam)) + '"' + (published ? ' disabled' : '') + '></td>' +
+              '<td class="bal" data-total>' + (x.total === null ? '-' : esc(x.total)) + '</td><td data-grade>' + gradePill(x.grade) + '</td></tr>';
+          }).join('') + '</tbody></table></div>' +
+          '<div class="toolbar">' + (published ? '<button type="button" class="secondary" id="mkUnpub">Unpublish results</button>' : '<button type="button" id="mkSave">Save marks</button><button type="button" class="secondary" id="mkPub">Save and publish to students</button>') + '</div>'
+          : emptyBox('Nobody has picked or been enrolled in this course for this semester yet.', 'No students enrolled', '', '', true)));
+    function collect() {
+      return [].map.call($('view').querySelectorAll('#mkTable tbody tr'), function (tr) { return { studentId: tr.getAttribute('data-sid'), coursework: tr.querySelector('[data-cw]').value, exam: tr.querySelector('[data-ex]').value }; });
+    }
+    $('mkBack').addEventListener('click', function () { f.courseId = ''; route(); });
+    $('view').querySelectorAll('#mkTable tbody tr').forEach(function (tr) {
+      var cw = tr.querySelector('[data-cw]'), ex = tr.querySelector('[data-ex]');
+      function upd() {
+        var a = cw.value, b = ex.value, bad = (a !== '' && (Number(a) < 0 || Number(a) > r2.maxCoursework)) || (b !== '' && (Number(b) < 0 || Number(b) > r2.maxExam));
+        cw.style.borderColor = ex.style.borderColor = bad ? 'var(--bad)' : '';
+        if (a !== '' && b !== '' && !bad) { var tot = Math.round((Number(a) + Number(b)) * 100) / 100; tr.querySelector('[data-total]').textContent = tot; tr.querySelector('[data-grade]').innerHTML = gradePill(gradeFor(tot)); }
+        else { tr.querySelector('[data-total]').textContent = '-'; tr.querySelector('[data-grade]').textContent = '-'; }
+      }
+      cw.addEventListener('input', upd); ex.addEventListener('input', upd);
+    });
+    async function save() { await api('PUT', '/api/results/' + encodeURIComponent(f.courseId), { semesterId: f.semesterId, entries: collect() }); }
+    if ($('mkSave')) $('mkSave').addEventListener('click', async function () { try { await save(); toast('Marks saved.', 'ok'); route(); } catch (err) { toast(err.message, 'error'); } });
+    if ($('mkPub')) $('mkPub').addEventListener('click', async function () {
+      if (!confirm('Publish these results? Every student in this course will be able to see their marks and grade.')) return;
+      try { await save(); await api('POST', '/api/results/' + encodeURIComponent(f.courseId) + '/publish', { semesterId: f.semesterId }); toast('Results published. Students were notified.', 'ok'); route(); } catch (err) { toast(err.message, 'error'); }
+    });
+    if ($('mkUnpub')) $('mkUnpub').addEventListener('click', async function () {
+      if (!confirm('Hide these results from students so you can change them?')) return;
+      try { await api('POST', '/api/results/' + encodeURIComponent(f.courseId) + '/publish', { semesterId: f.semesterId, publish: false }); toast('Results hidden from students.', 'ok'); route(); } catch (err) { toast(err.message, 'error'); }
+    });
+    $('mkCsv').addEventListener('click', function () {
+      downloadCsv('marks-' + co.code + '.csv', ['Name', 'Registration no.', 'Roll no.', 'Coursework', 'Exam', 'Total', 'Grade'], rows.map(function (x) { return [x.name, x.loginId, x.rollNo, x.coursework, x.exam, x.total, x.grade]; }));
+    });
+  };
+});
+VIEWS.student.myresults = async function (t) {
+  var r = await api('GET', '/api/my/results'); if (!live(t)) return;
+  var aside = '<div class="dash-aside">' + panel('award', 'Grading scale', '<ul class="minilist">' + r.scale.map(function (g, i) { var top = i ? r.scale[i - 1].from - 1 : 100; return '<li><span>' + g.grade + '</span><span class="r">' + g.from + ' - ' + top + '</span></li>'; }).join('') + '</ul><p class="hint" style="margin-bottom:0">GPA is worked out from these points, weighted by course credits.</p>') + '</div>';
+  $('view').innerHTML = '<h2>My Results</h2><div class="dash"><div>' +
+    (r.semesters.length ? '<div class="cards">' + statCard(r.cgpa.toFixed(2), 'Cumulative GPA') + statCard(r.credits, 'Credits earned') + statCard(r.semesters.length, 'Semesters with results') + '</div>' +
+      r.semesters.map(function (x) {
+        return section(x.semester.name, 'Semester GPA ' + Number(x.gpa).toFixed(2) + ' &middot; ' + x.credits + ' credits', '<div class="table-wrap"><table><thead><tr><th>Code</th><th>Course</th><th>Credits</th><th>Coursework</th><th>Exam</th><th>Total</th><th>Grade</th></tr></thead><tbody>' +
+          x.courses.map(function (c) { return '<tr><td><b>' + esc(c.code) + '</b></td><td>' + esc(c.title) + '</td><td>' + esc(c.credits) + '</td><td>' + esc(c.coursework) + '</td><td>' + esc(c.exam) + '</td><td><b>' + esc(c.total) + '</b></td><td>' + gradePill(c.grade) + '</td></tr>'; }).join('') + '</tbody></table></div>');
+      }).join('')
+      : emptyBox('When your lecturers publish marks for your courses, they will appear here and you will get a notification.', 'No results published yet')) +
+    '</div>' + aside + '</div>';
+};
+
+/* ---------- lecturer: student management ---------- */
+VIEWS.lecturer.mystudents = async function (t) {
+  var f = ui.mystudents; if (!f.semesterId) f.semesterId = currentSemId();
+  var r = await api('GET', '/api/lecturer/students?' + qs({ semesterId: f.semesterId, courseId: f.courseId })); if (!live(t)) return;
+  if (f.courseId && !r.courses.some(function (c) { return c.id === f.courseId; })) f.courseId = '';
+  var semName = nameOf(state.meta.semesters, f.semesterId), total = r.courses.reduce(function (n, c) { return n + c.enrolled; }, 0);
+  $('view').innerHTML = '<h2>My Students</h2><div class="toolbar"><div><label for="msSem">Semester</label><select id="msSem">' + semOptions(f.semesterId) + '</select></div>' +
+    '<div><label for="msCourse">Course</label><select id="msCourse"><option value="">All my courses</option>' + r.courses.map(function (c) { return '<option value="' + esc(c.id) + '"' + (c.id === f.courseId ? ' selected' : '') + '>' + esc(c.code + ' ' + c.title) + '</option>'; }).join('') + '</select></div>' +
+    '<div class="grow"><label for="msSearch">Search name, roll no. or registration no.</label><input id="msSearch" type="search" placeholder="Type to search"></div>' +
+    '<div class="push"><button type="button" class="secondary" id="msCsv"' + (r.rows.length ? '' : ' disabled') + '>Download list</button></div></div>' +
+    (r.courses.length ? '<div class="course-cards"><button type="button" class="course-card' + (f.courseId ? '' : ' on') + '" data-cc=""><b>All my courses</b><span>' + total + ' student(s)</span></button>' + r.courses.map(function (c) { return '<button type="button" class="course-card' + (c.id === f.courseId ? ' on' : '') + '" data-cc="' + esc(c.id) + '"><b>' + esc(c.code) + '</b><span>' + esc(c.title) + '</span><span>' + c.enrolled + ' student(s)</span></button>'; }).join('') + '</div>' : '<div class="note">You are not teaching any course yet. Open My Courses and pick the courses you teach.</div>') +
+    '<p class="hint">' + r.rows.length + ' student(s) in ' + esc(semName) + '.</p>' +
+    (r.rows.length ? '<div class="table-wrap"><table><thead><tr><th>#</th><th>Name</th><th>Roll No.</th><th>Registration no.</th><th>Phone</th><th>Program</th><th>Year</th><th>Course(s)</th></tr></thead><tbody>' +
+      r.rows.map(function (u, i) { return '<tr data-search="' + esc((u.name + ' ' + u.loginId + ' ' + u.rollNo).toLowerCase()) + '"><td>' + (i + 1) + '</td><td>' + esc(u.name) + '</td><td>' + esc(u.rollNo || '-') + '</td><td>' + esc(u.loginId) + '</td><td>' + esc(u.phone || '-') + '</td><td>' + esc(nameOf(state.meta.programs, u.programId)) + '</td><td>' + esc(u.year || '') + '</td><td>' + esc(u.courses.join(', ')) + '</td></tr>'; }).join('') + '</tbody></table></div>'
+      : (r.courses.length ? emptyBox('No students are enrolled in your courses for this semester.') : ''));
+  $('msSem').addEventListener('change', function () { f.semesterId = this.value; route(); });
+  on('[data-cc]', 'click', function (b) { f.courseId = b.getAttribute('data-cc'); route(); });
+  $('msCourse').addEventListener('change', function () { f.courseId = this.value; route(); });
+  $('msSearch').addEventListener('input', function () {
+    var q = this.value.trim().toLowerCase();
+    $('view').querySelectorAll('tr[data-search]').forEach(function (tr) { tr.hidden = q && tr.getAttribute('data-search').indexOf(q) < 0; });
+  });
+  var csv = $('msCsv');
+  if (csv) csv.addEventListener('click', function () {
+    downloadCsv('my-students-' + semName.replace(/[^A-Za-z0-9]+/g, '-') + '.csv', ['Name', 'Roll no.', 'Registration no.', 'Phone', 'Program', 'Year', 'Courses'],
+      r.rows.map(function (u) { return [u.name, u.rollNo, u.loginId, u.phone, nameOf(state.meta.programs, u.programId), u.year, u.courses.join(' ')]; }));
+  });
+};
+
+/* ---------- lecturer ---------- */
+VIEWS.lecturer.dashboard = async function (t) {
+  var u = state.user, res = await Promise.all([api('GET', '/api/notifications/count'), latestPosts(), api('GET', '/api/lecturer/students?semesterId=' + encodeURIComponent(currentSemId()))]); if (!live(t)) return;
+  var courses = res[2].courses, dep = u.departmentId ? nameOf(state.meta.departments, u.departmentId) : '-';
+  var aside = '<div class="dash-aside">' + todayPanel(nameOf(state.meta.semesters, currentSemId())) +
+    checklist('Getting started', [['Pick the courses you teach', courses.length > 0, 'mycourses'], ['See your students', res[2].rows.length > 0, 'mystudents'], ['Add your photo', !!u.hasPhoto, 'profile']]) +
+    panel('user', 'My details', '<dl class="info"><dt>Staff ID</dt><dd>' + esc(u.loginId) + '</dd><dt>Department</dt><dd>' + esc(dep) + '</dd><dt>Phone</dt><dd>' + esc(u.phone || '-') + '</dd></dl>', ['profile', 'Edit']) +
+    panel('award', 'Marks and results', '<p>Enter coursework and exam marks for your courses, then publish them to students.</p>', ['marks', 'Open']) + panel('clock', 'Coming soon', '<p>Attendance registers will be added in the next phase.</p>') + '</div>';
+  $('view').innerHTML = hero(greeting() + ', ' + u.name, 'Welcome to the Starford staff portal.', [u.loginId, u.departmentId ? dep : '', nameOf(state.meta.semesters, currentSemId())]) +
+    '<div class="dash"><div><div class="cards">' + statCard(courses.length, 'Courses I teach') + statCard(res[2].rows.length, 'Students this semester') + statCard(res[0].unread, 'Unread notifications') + '</div>' +
+    quickLinks([['mycourses', 'Pick my courses'], ['mystudents', 'My students'], ['marks', 'Enter marks'], ['announcements', 'Post an announcement'], ['profile', 'My profile']]) +
+    (courses.length ? section('My courses this semester', '', '<div class="table-wrap"><table><thead><tr><th>Code</th><th>Course</th><th>Students</th></tr></thead><tbody>' + courses.map(function (c) { return '<tr><td><b>' + esc(c.code) + '</b></td><td>' + esc(c.title) + '</td><td>' + c.enrolled + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+      '<h4 class="mini">Students per course</h4>' + bars(courses.map(function (c) { return { label: c.code + ' ' + c.title, value: c.enrolled }; }))) : emptyBox('Open My Courses and pick the courses you will teach. Students who pick them will appear under My Students.', 'You are not teaching any course yet', 'mycourses', 'Pick my courses')) +
+    res[1] + '</div>' + aside + '</div>';
+};
+
+/* ---------- notifications and profile (everyone) ---------- */
+function notificationsView(role) {
+  VIEWS[role].notifications = async function (t) {
+    var r = await api('GET', '/api/notifications'); if (!live(t)) return;
+    $('view').innerHTML = '<h2>Notifications</h2>' + (r.notifications.length ? r.notifications.map(function (n) {
+      return '<div class="card' + (n.read ? '' : ' unread') + '" style="margin-bottom:10px">' + esc(n.text) + '<div class="hint" style="margin:4px 0 0">' + fmtDate(n.at) + '</div></div>';
+    }).join('') : emptyBox('No notifications.'));
+    if (r.unread) { await api('POST', '/api/notifications/read'); setBell(0); }
+  };
+}
+function profileView(role) {
+  VIEWS[role].profile = async function (t) {
+    var u = state.user, p = state.meta.programs.filter(function (x) { return x.id === u.programId; })[0];
+    $('view').innerHTML = '<h2>My Profile</h2><div class="profile-grid">' +
+      '<div class="card"><div class="profile-head">' + avatar(u, 'lg') + '<div><label class="btn small">' + (u.hasPhoto ? 'Change photo' : 'Upload photo') + '<input id="photoInput" type="file" accept="image/*"></label> ' +
+      (u.hasPhoto ? '<button id="photoRemove" type="button" class="small secondary">Remove</button>' : '') + '<p class="hint">This is your profile picture. It is shown only on this page and to the registry office.</p></div></div>' +
+      '<dl class="info" style="margin-top:16px"><dt>Name</dt><dd>' + esc(u.name) + '</dd><dt>' + (u.role === 'student' ? 'Registration no.' : 'Staff ID') + '</dt><dd>' + esc(u.loginId) + '</dd>' +
+      (u.departmentId ? '<dt>Department</dt><dd>' + esc(nameOf(state.meta.departments, u.departmentId)) + '</dd>' : '') + (p ? '<dt>Program</dt><dd>' + esc(p.name) + '</dd>' : '') + (u.year ? '<dt>Year</dt><dd>' + u.year + '</dd>' : '') + '</dl></div>' +
+      '<div><form id="phoneForm" class="card"><b>Phone number</b><label for="phoneIn">Your contact number</label><input id="phoneIn" type="tel" maxlength="25" placeholder="+211 912 345 678" value="' + esc(u.phone) + '"><p><button type="submit">Save phone number</button></p></form>' +
+      '<form id="pwChange" class="card" style="margin-top:16px"><b>Change password</b><label for="cpCur">Current password</label><input id="cpCur" type="password" autocomplete="current-password" required><label for="cpNew">New password</label><input id="cpNew" type="password" autocomplete="new-password" required><label for="cpNew2">New password again</label><input id="cpNew2" type="password" autocomplete="new-password" required><p><button type="submit">Change password</button></p></form></div></div>';
+    $('photoInput').addEventListener('change', function () {
+      var file = this.files[0]; if (!file) return;
+      uploadPhoto(file).then(function () { toast('Photo saved.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); });
+    });
+    var rm = $('photoRemove');
+    if (rm) rm.addEventListener('click', function () { api('DELETE', '/api/me/photo').then(function (r) { state.user = r.user; refreshTop(); toast('Photo removed.', 'ok'); route(); }).catch(function (err) { toast(err.message, 'error'); }); });
+    $('phoneForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      try { var r = await api('PUT', '/api/me', { phone: $('phoneIn').value }); state.user = r.user; toast('Phone number saved.', 'ok'); } catch (err) { toast(err.message, 'error'); }
+    });
+    $('pwChange').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      if ($('cpNew').value !== $('cpNew2').value) return toast('The two new passwords do not match.', 'error');
+      try { await api('POST', '/api/password', { current: $('cpCur').value, next: $('cpNew').value }); toast('Password changed. Other devices were signed out.', 'ok'); $('pwChange').reset(); } catch (err) { toast(err.message, 'error'); }
+    });
+  };
+}
+['admin', 'student', 'lecturer', 'accounts'].forEach(profileView);
+['student', 'lecturer', 'accounts'].forEach(notificationsView);
+
+/* ---------- notifications bell ---------- */
+function setBell(n) { var el = $('bellCount'); el.textContent = n; el.hidden = !n; }
+async function pollBell() {
+  if (!state.user || state.user.role === 'admin' || document.hidden) return;
+  try { var r = await api('GET', '/api/notifications/count', undefined, { quiet: true }); setBell(r.unread); } catch (e) { /* try again next time */ }
+}
+
+/* ---------- start, sign in, sign out ---------- */
+async function reloadMeta() { state.meta = await api('GET', '/api/meta'); }
+async function afterAuth() {
+  if (state.user.mustChange) { showScreen('pw'); $('pwCurrent').focus(); return; }
+  await reloadMeta();
+  buildShell(); showScreen('app'); setBell(0);
+  clearInterval(state.poll); state.poll = setInterval(function () { pollBell(); pollAnn(); }, 60000); pollBell(); pollAnn();
+  route();
+}
+$('loginForm').addEventListener('submit', async function (e) {
+  e.preventDefault(); $('loginErr').textContent = '';
+  var btn = this.querySelector('button'); btn.disabled = true;
+  try {
+    var r = await api('POST', '/api/login', { loginId: $('loginId').value, password: $('password').value }, { quiet: true });
+    $('password').value = ''; state.user = r.user; location.hash = ''; await afterAuth();
+  } catch (err) { $('loginErr').textContent = err.message; }
+  btn.disabled = false;
+});
+$('pwForm').addEventListener('submit', async function (e) {
+  e.preventDefault(); $('pwErr').textContent = '';
+  if ($('pwNew').value !== $('pwNew2').value) { $('pwErr').textContent = 'The two new passwords do not match.'; return; }
+  try {
+    var r = await api('POST', '/api/password', { current: $('pwCurrent').value, next: $('pwNew').value });
+    state.user = r.user; this.reset(); await afterAuth();
+  } catch (err) { $('pwErr').textContent = err.message; }
+});
+async function logout(e) {
+  if (e) e.preventDefault();
+  try { await api('POST', '/api/logout', undefined, { quiet: true }); } catch (err) { /* already signed out */ }
+  state.user = null; clearInterval(state.poll); state.token++; location.hash = '';
+  $('loginErr').textContent = ''; showScreen('login');
+}
+$('logoutBtn').addEventListener('click', logout);
+$('pwLogout').addEventListener('click', logout);
+window.addEventListener('hashchange', route);
+
+(async function boot() {
+  document.querySelectorAll('[data-ic]').forEach(function (el) { el.innerHTML = ico(el.getAttribute('data-ic')); });
+  if (location.protocol === 'file:') {
+    $('boot').innerHTML = '<div><h2>Open the portal through the server</h2><p>This page was opened as a file, so it cannot reach the portal server.<br>Start the server (double-click <b>START-PORTAL.bat</b>), then open <b>http://localhost:3000</b> in your browser.</p></div>';
+    return;
+  }
+  try { var r = await api('GET', '/api/me', undefined, { quiet: true }); state.user = r.user; await afterAuth(); }
+  catch (err) { showScreen('login'); if (err.status !== 401) $('loginErr').textContent = err.message; }
+})();
+})();
+</script>
+</body>
+</html>
